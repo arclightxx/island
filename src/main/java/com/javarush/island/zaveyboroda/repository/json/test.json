@@ -1,0 +1,127 @@
+[
+  {
+    "type": "Bear",
+    "MAX_WEIGHT": 500.0,
+    "MAX_AMOUNT_ON_CELL": 5,
+    "MAX_TRAVEL_SPEED": 2,
+    "AMOUNT_OF_FOOD_TO_FILL": 80.0,
+    "MAX_AGE": 20
+  },
+
+  {
+    "type": "Boa",
+    "MAX_WEIGHT": 15.0,
+    "MAX_AMOUNT_ON_CELL": 30,
+    "MAX_TRAVEL_SPEED": 1,
+    "AMOUNT_OF_FOOD_TO_FILL": 3.0,
+    "MAX_AGE": 20
+  },
+
+  {
+    "type": "Eagle",
+    "MAX_WEIGHT": 6.0,
+    "MAX_AMOUNT_ON_CELL": 20,
+    "MAX_TRAVEL_SPEED": 3,
+    "AMOUNT_OF_FOOD_TO_FILL": 1.0,
+    "MAX_AGE": 14
+  },
+
+  {
+    "type": "Fox",
+    "MAX_WEIGHT": 8.0,
+    "MAX_AMOUNT_ON_CELL": 30,
+    "MAX_TRAVEL_SPEED": 2,
+    "AMOUNT_OF_FOOD_TO_FILL": 2.0,
+    "MAX_AGE": 5
+  },
+
+  {
+    "type": "Wolf",
+    "MAX_WEIGHT": 50.0,
+    "MAX_AMOUNT_ON_CELL": 30,
+    "MAX_TRAVEL_SPEED": 3,
+    "AMOUNT_OF_FOOD_TO_FILL": 8.0,
+    "MAX_AGE": 16
+  },
+
+  {
+    "type": "Horse",
+    "MAX_WEIGHT": 400.0,
+    "MAX_AMOUNT_ON_CELL": 20,
+    "MAX_TRAVEL_SPEED": 4,
+    "AMOUNT_OF_FOOD_TO_FILL": 60.0,
+    "MAX_AGE": 25
+  },
+
+  {
+    "type": "Deer",
+    "MAX_WEIGHT": 300.0,
+    "MAX_AMOUNT_ON_CELL": 20,
+    "MAX_TRAVEL_SPEED": 4,
+    "AMOUNT_OF_FOOD_TO_FILL": 50.0,
+    "MAX_AGE": 13
+  },
+
+  {
+    "type": "Rabbit",
+    "MAX_WEIGHT": 2.0,
+    "MAX_AMOUNT_ON_CELL": 150,
+    "MAX_TRAVEL_SPEED": 2,
+    "AMOUNT_OF_FOOD_TO_FILL": 0.45,
+    "MAX_AGE": 8
+  },
+
+  {
+    "type": "Mouse",
+    "MAX_WEIGHT": 0.05,
+    "MAX_AMOUNT_ON_CELL": 500,
+    "MAX_TRAVEL_SPEED": 1,
+    "AMOUNT_OF_FOOD_TO_FILL": 0.01,
+    "MAX_AGE": 4
+  },
+
+  {
+    "type": "Goat",
+    "MAX_WEIGHT": 70.0,
+    "MAX_AMOUNT_ON_CELL": 140,
+    "MAX_TRAVEL_SPEED": 3,
+    "AMOUNT_OF_FOOD_TO_FILL": 10,
+    "MAX_AGE": 15
+  },
+
+  {
+    "type": "Boar",
+    "MAX_WEIGHT": 400.0,
+    "MAX_AMOUNT_ON_CELL": 50,
+    "MAX_TRAVEL_SPEED": 2,
+    "AMOUNT_OF_FOOD_TO_FILL": 50,
+    "MAX_AGE": 8
+  },
+
+  {
+    "type": "Buffalo",
+    "MAX_WEIGHT": 700.0,
+    "MAX_AMOUNT_ON_CELL": 10,
+    "MAX_TRAVEL_SPEED": 3,
+    "AMOUNT_OF_FOOD_TO_FILL": 18,
+    "MAX_AGE": 20
+  },
+
+  {
+    "type": "Duck",
+    "MAX_WEIGHT": 1.0,
+    "MAX_AMOUNT_ON_CELL": 200,
+    "MAX_TRAVEL_SPEED": 4,
+    "AMOUNT_OF_FOOD_TO_FILL": 0.15,
+    "MAX_AGE": 8
+  },
+
+  {
+    "type": "Caterpillar",
+    "MAX_WEIGHT": 0.01,
+    "MAX_AMOUNT_ON_CELL": 1000,
+    "MAX_TRAVEL_SPEED": 0,
+    "AMOUNT_OF_FOOD_TO_FILL": 0,
+    "MAX_AGE": 3
+  }
+]
