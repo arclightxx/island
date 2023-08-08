@@ -1,10 +1,10 @@
 package com.javarush.island.zaveyboroda.repository;
 
 public class ConstantNatureClassesPath {
-    private static final String[] natureClassesPath = {"com.javarush.island.zaveyboroda.animals.predators.",
-            "com.javarush.island.zaveyboroda.animals.herbivores.",
-            "com.javarush.island.zaveyboroda.animals.omnivores.",
-            "com.javarush.island.zaveyboroda.plants." };
+    private static final String[] natureClassesPath = {"com.javarush.island.zaveyboroda.entities.animals.predators.",
+            "com.javarush.island.zaveyboroda.entities.animals.herbivores.",
+            "com.javarush.island.zaveyboroda.entities.animals.omnivores.",
+            "com.javarush.island.zaveyboroda.entities.plants." };
 
     private ConstantNatureClassesPath() {}
 
