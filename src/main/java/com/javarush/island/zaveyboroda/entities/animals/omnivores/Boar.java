@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.animals.omnivores;
+package com.javarush.island.zaveyboroda.entities.animals.omnivores;
 
 import com.javarush.island.zaveyboroda.entities.NatureFeatures;
 import com.javarush.island.zaveyboroda.entities.Herbivore;

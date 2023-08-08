@@ -1,9 +1,9 @@
-package com.javarush.island.zaveyboroda.plants;
+package com.javarush.island.zaveyboroda.entities.plants;
 
 import com.javarush.island.zaveyboroda.annotations.CalculateRandomAgeProcessor;
 import com.javarush.island.zaveyboroda.annotations.InjectRandomCurrentAge;
 import com.javarush.island.zaveyboroda.entities.Nature;
-import com.javarush.island.zaveyboroda.gamefield.Cell;
+import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 
 import java.util.Objects;
@@ -14,7 +14,7 @@ public abstract class PlantFeatures implements Nature {
     private double currentWeight;
     @InjectRandomCurrentAge(min = 10)
     private int currentAge;
-    private Cell currentLocation;
+    private Island.Cell currentLocation;
 
     public PlantFeatures(ConstantNatureFeatures constantNatureFeatures) {
         currentWeight = constantNatureFeatures.getMAX_WEIGHT();
@@ -66,11 +66,11 @@ public abstract class PlantFeatures implements Nature {
         this.currentAge = currentAge;
     }
 
-    public Cell getCurrentLocation() {
+    public Island.Cell getCurrentLocation() {
         return currentLocation;
     }
 
-    public void setCurrentLocation(Cell currentLocation) {
+    public void setCurrentLocation(Island.Cell currentLocation) {
         this.currentLocation = currentLocation;
     }
 }

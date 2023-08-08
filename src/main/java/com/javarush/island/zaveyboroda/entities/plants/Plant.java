@@ -1,18 +1,11 @@
-package com.javarush.island.zaveyboroda.animals.predators;
+package com.javarush.island.zaveyboroda.entities.plants;
 
-import com.javarush.island.zaveyboroda.entities.NatureFeatures;
 import com.javarush.island.zaveyboroda.entities.Nature;
-import com.javarush.island.zaveyboroda.entities.Predator;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 
-public class Bear extends NatureFeatures implements Predator {
-    public Bear(ConstantNatureFeatures animalFeature) {
-        super(animalFeature);
-    }
-
-    @Override
-    public void eat() {
-
+public class Plant extends PlantFeatures implements Nature {
+    public Plant(ConstantNatureFeatures natureFeature) {
+        super(natureFeature);
     }
 
     @Override

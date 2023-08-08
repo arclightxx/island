@@ -1,14 +1,13 @@
-package com.javarush.island.zaveyboroda.animals.predators;
+package com.javarush.island.zaveyboroda.entities.animals.predators;
 
 import com.javarush.island.zaveyboroda.entities.NatureFeatures;
-import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.entities.Predator;
+import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 
-public class Fox extends NatureFeatures implements Predator {
-
-    public Fox(ConstantNatureFeatures animalFeatures) {
-        super(animalFeatures);
+public class Bear extends NatureFeatures implements Predator {
+    public Bear(ConstantNatureFeatures animalFeature) {
+        super(animalFeature);
     }
 
     @Override

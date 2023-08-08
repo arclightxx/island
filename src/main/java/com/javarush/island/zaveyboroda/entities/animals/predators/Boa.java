@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.animals.predators;
+package com.javarush.island.zaveyboroda.entities.animals.predators;
 
 import com.javarush.island.zaveyboroda.entities.NatureFeatures;
 import com.javarush.island.zaveyboroda.entities.Nature;
