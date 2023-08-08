@@ -9,6 +9,7 @@ public class DataBase {
     private HashMap<String, Integer> naturesConfigMap;
     private HashMap<String, ConstantNatureFeatures> constantNaturesFeaturesMap;
     private HashMap<String, Class<? extends Nature>> natureClassesMap;
+    private HashMap<String, HashMap<String, Integer>> preferableFoodMap;
 
     private DataBase() {
     }
@@ -42,6 +43,14 @@ public class DataBase {
 
     public void setNatureClassesMap(HashMap<String, Class<? extends Nature>> natureClassesMap) {
         this.natureClassesMap = natureClassesMap;
+    }
+
+    public HashMap<String, HashMap<String, Integer>> getPreferableFoodMap() {
+        return preferableFoodMap;
+    }
+
+    public void setPreferableFoodMap(HashMap<String, HashMap<String, Integer>> preferableFoodMap) {
+        this.preferableFoodMap = preferableFoodMap;
     }
 
     //    @Override
