@@ -67,7 +67,7 @@ public class InitDataBase {
                 Class<?> natureClass = ConstantNatureClassesPath.classFinder(natureName);
                 natureClasses.put(natureName, (Class<? extends Nature>) natureClass);
             } catch (ClassNotFoundException e) {
-                System.err.println("Class " + natureName + " not found");
+                throw new RuntimeException("Class " + natureName + " not found");
             }
         }
     }
