@@ -1,17 +1,9 @@
 package com.javarush.island.zaveyboroda.entities;
 
+import com.javarush.island.zaveyboroda.gamefield.Island;
+
 public interface Nature {
     default void reproduction(Nature father, Nature mother) {
 
-    };
-
-    default boolean isEaten() {
-        return true;
     }
-
-    default boolean isDiedOfHunger(){return true;}
-
-    default boolean isDiedNaturally() {
-        return true;
-    };
 }

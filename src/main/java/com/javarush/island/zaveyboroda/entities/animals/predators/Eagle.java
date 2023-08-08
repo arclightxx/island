@@ -21,19 +21,4 @@ public class Eagle extends NatureFeatures implements Predator {
     public void reproduction(Nature father, Nature mother) {
 
     }
-
-    @Override
-    public boolean isEaten() {
-        return false;
-    }
-
-    @Override
-    public boolean isDiedOfHunger() {
-        return false;
-    }
-
-    @Override
-    public boolean isDiedNaturally() {
-        return false;
-    }
 }
