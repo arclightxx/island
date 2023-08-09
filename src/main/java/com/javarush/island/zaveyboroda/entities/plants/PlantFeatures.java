@@ -2,6 +2,7 @@ package com.javarush.island.zaveyboroda.entities.plants;
 
 import com.javarush.island.zaveyboroda.annotations.CalculateRandomAgeProcessor;
 import com.javarush.island.zaveyboroda.annotations.InjectRandomCurrentAge;
+import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
@@ -12,6 +13,7 @@ import java.util.Random;
 
 public abstract class PlantFeatures implements Nature {
     private boolean isAlive = true;
+    private String name;
     private double currentWeight;
     @InjectRandomCurrentAge(min = 10)
     private int currentAge;
@@ -20,6 +22,7 @@ public abstract class PlantFeatures implements Nature {
 
     public PlantFeatures(ConstantNatureFeatures constantNatureFeatures, Island.Cell cell, boolean isBaby) {
         CalculateRandomAgeProcessor.calculateAndSetRandomCurrentAge(this, constantNatureFeatures, isBaby);
+        name = this.getClass().getSimpleName();
         currentWeight = constantNatureFeatures.getMAX_WEIGHT();
         deadCause = DeadCause.ALIVE;
         currentLocation = cell;
@@ -54,6 +57,15 @@ public abstract class PlantFeatures implements Nature {
         isAlive = alive;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public double getCurrentWeight() {
         return currentWeight;
     }
@@ -84,5 +96,20 @@ public abstract class PlantFeatures implements Nature {
 
     public void setCurrentLocation(Island.Cell currentLocation) {
         this.currentLocation = currentLocation;
+    }
+
+    @Override
+    public void grow(MainController controller) {
+        currentAge ++;
+        if (currentAge == controller.getDataBase()
+                .getConstantNaturesFeaturesMap()
+                .get(name)
+                .getMAX_AGE()) {
+            deadCause = DeadCause.DIED_NATURALLY;
+            isAlive = false;
+            currentLocation.removeNature(this);
+
+            System.out.println(name + " " + deadCause + " on " + currentLocation.getX() + "," + currentLocation.getY() + " at age " + currentAge);
+        }
     }
 }

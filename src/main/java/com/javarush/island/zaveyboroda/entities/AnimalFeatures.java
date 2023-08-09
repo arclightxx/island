@@ -122,9 +122,24 @@ public abstract class AnimalFeatures implements Animal, Nature {
     }
 
     @Override
+    public void grow(MainController controller) {
+        currentAge++;
+        if (currentAge == controller.getDataBase()
+                .getConstantNaturesFeaturesMap()
+                .get(name)
+                .getMAX_AGE()) {
+            deadCause = DeadCause.DIED_NATURALLY;
+            isAlive = false;
+            currentLocation.removeNature(this);
+
+            System.out.println(name + " " + deadCause + " on " + currentLocation.getX() + "," + currentLocation.getY() + " at age " + currentAge);
+        }
+    }
+
+    @Override
     public void move(MainController controller, Island.Cell[][] cells) {
         if (!calculateRandomMove(controller)) {
-            System.out.println(name + " stay on it's field " + currentLocation.getX() + "," + currentLocation.getY());
+//            System.out.println(name + " stay on it's field " + currentLocation.getX() + "," + currentLocation.getY());
             return;
         }
 
@@ -136,12 +151,12 @@ public abstract class AnimalFeatures implements Animal, Nature {
         int newX = newLocation[0];
         int newY = newLocation[1];
 
-        if (cells[newX][newY].tryAddAnimal(this)) {
-            currentLocation.removeAnimal(this);
+        if (cells[newX][newY].tryAddNature(this)) {
+            currentLocation.removeNature(this);
             currentLocation = cells[newX][newY];
-            System.out.println(name + " moved from " + oldX + "," + oldY + " to " + newX + "," + newY);
+//            System.out.println(name + " moved from " + oldX + "," + oldY + " to " + newX + "," + newY);
         } else {
-            System.out.println(name + " can't move to " + newX + "," + newY + " location - it's full");
+//            System.out.println(name + " can't move to " + newX + "," + newY + " location - it's full");
         }
 
         counter++;
