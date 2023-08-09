@@ -3,17 +3,14 @@ package com.javarush.island.zaveyboroda.gamefield;
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.entities.AnimalFeatures;
-import com.javarush.island.zaveyboroda.entities.plants.PlantFeatures;
 import com.javarush.island.zaveyboroda.factory.NatureFactory;
 import com.javarush.island.zaveyboroda.repository.DataBase;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class Island {
-    private final int WIDTH = 5;
-    private final int HEIGHT = 5;
+    public static final int WIDTH = 5;
+    public static final int HEIGHT = 5;
     private final MainController mainController;
     private Island island;
     private final Cell[][] cells;
@@ -33,20 +30,34 @@ public class Island {
             }
         }
 
-        HashMap<String, HashSet<? extends Nature>> map = cells[0][0].natureOnCell;
+        HashMap<String, HashSet<Nature>> map = cells[0][0].natureOnCell;
 
-        map.forEach(((s, natures) -> System.out.println(s + " " + natures)));
+//        map.forEach(((s, natures) -> System.out.println(s + " " + natures.size())));
     }
 
     public void startSimulation() {
         initCellsAndNature();
 
+        List<AnimalFeatures> animalSetList = Arrays.stream(cells)
+                .flatMap(Arrays::stream)
+                .flatMap(cell -> cell.getNatureOnCell().values().stream())
+                .flatMap(Collection::stream)
+                .filter(nature -> nature instanceof AnimalFeatures)
+                .map(animal -> (AnimalFeatures) animal)
+                .toList();
 
+        for (AnimalFeatures animal : animalSetList) {
+//            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
+//            System.out.println();
+            animal.move(mainController, cells);
+//            System.out.println();
+//            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
+        }
     }
 
-    private <T extends Nature> void initNatureOnCell(Cell cell, DataBase db) {
-        HashMap<String, HashSet<? extends Nature>> naturesOnCell = new HashMap<>();
-        HashMap<String, Class<? extends Nature>> natureClassesMap = db.getNatureClassesMap();
+    private void initNatureOnCell(Cell cell, DataBase db) {
+        HashMap<String, HashSet<Nature>> naturesOnCell = new HashMap<>();
+        HashMap<String, Class<Nature>> natureClassesMap = db.getNatureClassesMap();
 
         for (String key: natureClassesMap.keySet()) {
             Class<? extends Nature> natureClass = db.getNatureClassesMap().get(key);
@@ -67,10 +78,10 @@ public class Island {
         cell.setNatureOnCell(naturesOnCell);
     }
 
-    public static class Cell {
-        private int x;
-        private int y;
-        private HashMap<String, HashSet<? extends Nature>> natureOnCell;
+    public class Cell {
+        private final int x;
+        private final int y;
+        private HashMap<String, HashSet<Nature>> natureOnCell;
 
         public Cell(int x, int y) {
             this.x = x;
@@ -81,28 +92,37 @@ public class Island {
             return x;
         }
 
-        public void setX(int x) {
-            this.x = x;
-        }
-
         public int getY() {
             return y;
         }
 
-        public void setY(int y) {
-            this.y = y;
-        }
-
-        public HashMap<String, HashSet<? extends Nature>> getNatureOnCell() {
+        public HashMap<String, HashSet<Nature>> getNatureOnCell() {
             return natureOnCell;
         }
 
-        public void setNatureOnCell(HashMap<String, HashSet<? extends Nature>> natureOnCell) {
+        public void setNatureOnCell(HashMap<String, HashSet<Nature>> natureOnCell) {
             this.natureOnCell = natureOnCell;
         }
 
         private void createNature() {
 
+        }
+
+        public boolean tryAddAnimal(AnimalFeatures animal) {
+            if (natureOnCell.get(animal.getName()).size() < mainController.getDataBase()
+                    .getConstantNaturesFeaturesMap()
+                    .get(animal.getName())
+                    .getMAX_AMOUNT_ON_CELL()) {
+                natureOnCell.get(animal.getName()).add(animal);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public void removeAnimal(AnimalFeatures animal) {
+            natureOnCell.get(animal.getName()).remove(animal);
         }
     }
 }
