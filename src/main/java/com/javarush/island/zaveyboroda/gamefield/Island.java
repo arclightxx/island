@@ -2,10 +2,12 @@ package com.javarush.island.zaveyboroda.gamefield;
 
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.entities.Nature;
-import com.javarush.island.zaveyboroda.entities.NatureFeatures;
+import com.javarush.island.zaveyboroda.entities.AnimalFeatures;
+import com.javarush.island.zaveyboroda.entities.plants.PlantFeatures;
 import com.javarush.island.zaveyboroda.factory.NatureFactory;
 import com.javarush.island.zaveyboroda.repository.DataBase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -33,6 +35,7 @@ public class Island {
 
         HashMap<String, HashSet<? extends Nature>> map = cells[0][0].natureOnCell;
 
+        map.forEach(((s, natures) -> System.out.println(s + " " + natures)));
     }
 
     public void startSimulation() {
@@ -52,9 +55,9 @@ public class Island {
                 naturesOnCell.put(key, new HashSet<>());
             }
 
-            HashSet<NatureFeatures> naturesSet = new HashSet<>();
+            HashSet<Nature> naturesSet = new HashSet<>();
             for (int i = 0; i < db.getNaturesConfigMap().get(key); i++){
-                NatureFeatures natureObject = NatureFactory.createNature(natureClass, db);
+                Nature natureObject = NatureFactory.createNature(natureClass, db, cell, false);
 
                 naturesSet.add(natureObject);
                 naturesOnCell.put(key, naturesSet);
