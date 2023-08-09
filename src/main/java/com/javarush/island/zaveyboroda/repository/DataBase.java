@@ -8,7 +8,7 @@ public class DataBase {
     private static DataBase dataBase;
     private HashMap<String, Integer> naturesConfigMap;
     private HashMap<String, ConstantNatureFeatures> constantNaturesFeaturesMap;
-    private HashMap<String, Class<? extends Nature>> natureClassesMap;
+    private HashMap<String, Class<Nature>> natureClassesMap;
     private HashMap<String, HashMap<String, Integer>> preferableFoodMap;
 
     private DataBase() {
@@ -37,11 +37,11 @@ public class DataBase {
         this.constantNaturesFeaturesMap = constantNaturesFeaturesMap;
     }
 
-    public HashMap<String, Class<? extends Nature>> getNatureClassesMap() {
+    public HashMap<String, Class<Nature>> getNatureClassesMap() {
         return natureClassesMap;
     }
 
-    public void setNatureClassesMap(HashMap<String, Class<? extends Nature>> natureClassesMap) {
+    public void setNatureClassesMap(HashMap<String, Class<Nature>> natureClassesMap) {
         this.natureClassesMap = natureClassesMap;
     }
 

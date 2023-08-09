@@ -54,18 +54,18 @@ public class InitDataBase {
 
     private void setNatureClassesMap(DataBase dataBase) {
         Set<String> natureSet = dataBase.getNaturesConfigMap().keySet();
-        HashMap<String, Class<? extends Nature>> natureClasses = new HashMap<>();
+        HashMap<String, Class<Nature>> natureClasses = new HashMap<>();
 
         fillNatureClassesMap(natureSet, natureClasses);
 
         dataBase.setNatureClassesMap(natureClasses);
     }
 
-    private void fillNatureClassesMap(Set<String> natureSet, HashMap<String, Class<? extends Nature>> natureClasses) {
+    private void fillNatureClassesMap(Set<String> natureSet, HashMap<String, Class<Nature>> natureClasses) {
         for (String natureName : natureSet) {
             try {
                 Class<?> natureClass = ConstantNatureClassesPath.classFinder(natureName);
-                natureClasses.put(natureName, (Class<? extends Nature>) natureClass);
+                natureClasses.put(natureName, (Class<Nature>) natureClass);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("Class " + natureName + " not found");
             }
