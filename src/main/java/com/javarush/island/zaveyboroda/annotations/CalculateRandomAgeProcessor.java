@@ -10,7 +10,7 @@ public class CalculateRandomAgeProcessor {
 
     }
 
-    public static void calculateAndSetRandomCurrentAge(Object object, ConstantNatureFeatures constantNatureFeatures) {
+    public static void calculateAndSetRandomCurrentAge(Object object, ConstantNatureFeatures constantNatureFeatures, boolean isBaby) {
         Class<?> clazz = object.getClass().getSuperclass();
         Field[] fields = clazz.getDeclaredFields();
         Random random = new Random();
@@ -21,7 +21,7 @@ public class CalculateRandomAgeProcessor {
                 int MAX_AGE = constantNatureFeatures.getMAX_AGE();
                 int min = ageAnnotation.min();
 
-                int result = random.nextInt(MAX_AGE - min) + min;
+                int result = isBaby ? min : random.nextInt(MAX_AGE - MAX_AGE/2 + 1) + MAX_AGE/2;
 
                 try {
                     field.setAccessible(true);

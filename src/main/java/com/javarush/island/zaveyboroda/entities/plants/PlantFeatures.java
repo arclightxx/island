@@ -5,6 +5,7 @@ import com.javarush.island.zaveyboroda.annotations.InjectRandomCurrentAge;
 import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
+import com.javarush.island.zaveyboroda.repository.DeadCause;
 
 import java.util.Objects;
 import java.util.Random;
@@ -14,23 +15,26 @@ public abstract class PlantFeatures implements Nature {
     private double currentWeight;
     @InjectRandomCurrentAge(min = 10)
     private int currentAge;
+    private DeadCause deadCause;
     private Island.Cell currentLocation;
 
-    public PlantFeatures(ConstantNatureFeatures constantNatureFeatures) {
+    public PlantFeatures(ConstantNatureFeatures constantNatureFeatures, Island.Cell cell, boolean isBaby) {
+        CalculateRandomAgeProcessor.calculateAndSetRandomCurrentAge(this, constantNatureFeatures, isBaby);
         currentWeight = constantNatureFeatures.getMAX_WEIGHT();
-        CalculateRandomAgeProcessor.calculateAndSetRandomCurrentAge(this, constantNatureFeatures);
+        deadCause = DeadCause.ALIVE;
+        currentLocation = cell;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PlantFeatures that)) return false;
-        return isAlive == that.isAlive && Double.compare(currentWeight, that.currentWeight) == 0 && currentAge == that.currentAge && Objects.equals(currentLocation, that.currentLocation);
+        return isAlive == that.isAlive && Double.compare(currentWeight, that.currentWeight) == 0 && currentAge == that.currentAge && deadCause == that.deadCause && Objects.equals(currentLocation, that.currentLocation);
     }
 
     @Override
     public int hashCode() {
-//        return Objects.hash(isAlive, currentWeight, currentAge, currentLocation);
+//        return Objects.hash(isAlive, currentWeight, currentAge, deadCause, currentLocation);
         return new Random().nextInt(Integer.MAX_VALUE);
     }
 
@@ -64,6 +68,14 @@ public abstract class PlantFeatures implements Nature {
 
     public void setCurrentAge(int currentAge) {
         this.currentAge = currentAge;
+    }
+
+    public DeadCause getDeadCause() {
+        return deadCause;
+    }
+
+    public void setDeadCause(DeadCause deadCause) {
+        this.deadCause = deadCause;
     }
 
     public Island.Cell getCurrentLocation() {

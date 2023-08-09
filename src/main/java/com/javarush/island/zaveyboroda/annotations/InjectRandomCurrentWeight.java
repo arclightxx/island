@@ -6,6 +6,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface InjectRandomCurrentWeight {
-    double min();
-    double max();
+
+    double adultWeightSpread();
+
+    double babyWeightSpread();
 }

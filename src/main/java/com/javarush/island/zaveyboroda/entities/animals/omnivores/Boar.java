@@ -1,12 +1,13 @@
 package com.javarush.island.zaveyboroda.entities.animals.omnivores;
 
-import com.javarush.island.zaveyboroda.entities.NatureFeatures;
+import com.javarush.island.zaveyboroda.entities.AnimalFeatures;
 import com.javarush.island.zaveyboroda.entities.Herbivore;
 import com.javarush.island.zaveyboroda.entities.Predator;
+import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 
-public class Boar extends NatureFeatures implements Predator, Herbivore {
-    public Boar(ConstantNatureFeatures animalFeatures) {
-        super(animalFeatures);
+public class Boar extends AnimalFeatures implements Predator, Herbivore {
+    public Boar(ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
+        super(animalFeatures, cell, isBaby);
     }
 }
