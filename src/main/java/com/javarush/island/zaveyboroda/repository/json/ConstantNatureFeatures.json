@@ -95,7 +95,7 @@
     "MAX_AMOUNT_ON_CELL": 1000,
     "MAX_TRAVEL_SPEED": 0,
     "AMOUNT_OF_FOOD_TO_FILL": 0,
-    "MAX_AGE": 3
+    "MAX_AGE": 50
   },
   "Plant": {
     "MAX_WEIGHT": 1,
