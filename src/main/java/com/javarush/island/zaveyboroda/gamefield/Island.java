@@ -5,6 +5,7 @@ import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.entities.AnimalFeatures;
 import com.javarush.island.zaveyboroda.factory.NatureFactory;
 import com.javarush.island.zaveyboroda.repository.DataBase;
+import com.javarush.island.zaveyboroda.view.View;
 
 import java.util.*;
 
@@ -12,10 +13,14 @@ public class Island {
     public static final int WIDTH = 5;
     public static final int HEIGHT = 5;
     private final MainController mainController;
+    private final DataBase dataBase;
+    private final View view;
     private final Cell[][] cells;
 
     public Island(MainController mainController) {
         this.mainController = mainController;
+        this.dataBase = mainController.getDataBase();
+        this.view = mainController.getView();
         cells = new Cell[WIDTH][HEIGHT];
     }
 
@@ -25,13 +30,9 @@ public class Island {
                 cells[i][j] = new Cell(i, j);
                 Cell cell = cells[i][j];
                 cell.createNature();
-                initNatureOnCell(cell, mainController.getDataBase());
+                initNatureOnCell(cell, dataBase);
             }
         }
-
-        HashMap<String, HashSet<Nature>> map = cells[0][0].natureOnCell;
-
-        map.forEach(((s, natures) -> System.out.println(s + " " + natures.size())));
     }
 
     public void startSimulation() {
@@ -139,7 +140,7 @@ public class Island {
         }
 
         public boolean tryAddNature(Nature nature) {
-            if (natureOnCell.get(nature.getClass().getSimpleName()).size() < mainController.getDataBase()
+            if (natureOnCell.get(nature.getClass().getSimpleName()).size() < dataBase
                     .getConstantNaturesFeaturesMap()
                     .get(nature.getClass().getSimpleName())
                     .getMAX_AMOUNT_ON_CELL()) {
