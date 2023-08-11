@@ -1,9 +1,5 @@
 package com.javarush.island.zaveyboroda.entities;
 
-import com.javarush.island.zaveyboroda.annotations.InjectRandomCurrentAge;
-import com.javarush.island.zaveyboroda.annotations.InjectRandomCurrentWeight;
-import com.javarush.island.zaveyboroda.annotations.InjectRandomGender;
-import com.javarush.island.zaveyboroda.annotations.NatureFeaturesFieldAnnotationProcessor;
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
@@ -14,125 +10,28 @@ import com.javarush.island.zaveyboroda.repository.Gender;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class AnimalFeatures implements Animal, Nature {
-    private static int counter = 0;
-    private final String uniqueName;
-    private final String typeName;
-    private boolean isAlive = true;
-    @InjectRandomCurrentWeight(adultWeightSpread = 0.1, babyWeightSpread = 0.9)
-    private double currentWeight;
+public abstract class AnimalFeatures extends NatureAbstractClass implements Animal {
+    public static int eatCounter = 0;
+    private final double AMOUNT_OF_FOOD_TO_FILL;
     private int currentMove;
-    @InjectRandomCurrentAge(min = 1)
-    private int currentAge;
-    private DeadCause deadCause;
-    @InjectRandomGender
-    private Gender gender = Gender.FEMALE;
-    private Island.Cell currentLocation;
+    private final Gender GENDER;
 
     public AnimalFeatures(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
-        NatureFeaturesFieldAnnotationProcessor.calculateAndSetAnnotatedFields(this, animalFeatures, isBaby);
-        uniqueName = name + ++counter;
-        typeName = this.getClass().getSimpleName();
-        deadCause = DeadCause.ALIVE;
-        currentLocation = cell;
-    }
+        super(name, animalFeatures, cell, isBaby);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AnimalFeatures that)) return false;
-        return Objects.equals(uniqueName, that.uniqueName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uniqueName);
+        AMOUNT_OF_FOOD_TO_FILL = animalFeatures.getAMOUNT_OF_FOOD_TO_FILL();
+        GENDER = Math.random() > 0.5 ? Gender.MALE : Gender.FEMALE;
     }
 
     public String toString() {
-        return gender + " "
-                + this.getUniqueName() + " is alive and "
-                + currentWeight + "kg of weight; "
-                + currentAge + " years old";
+        return GENDER
+                + getTYPE_NAME() + " is " + getDeadCause()
+                + getCurrentWeight() + "kg of weight; "
+                + getCurrentAge() + " years old";
     }
 
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    public void setAlive(boolean alive) {
-        isAlive = alive;
-    }
-
-    public String getUniqueName() {
-        return uniqueName;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public double getCurrentWeight() {
-        return currentWeight;
-    }
-
-    public void setCurrentWeight(double currentWeight) {
-        this.currentWeight = currentWeight;
-    }
-
-    public int getCurrentMove() {
-        return currentMove;
-    }
-
-    public void setCurrentMove(int currentMove) {
-        this.currentMove = currentMove;
-    }
-
-    public int getCurrentAge() {
-        return currentAge;
-    }
-
-    public void setCurrentAge(int currentAge) {
-        this.currentAge = currentAge;
-    }
-
-    public DeadCause getDeadCause() {
-        return deadCause;
-    }
-
-    public void setDeadCause(DeadCause deadCause) {
-        this.deadCause = deadCause;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public Island.Cell getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public void setCurrentLocation(Island.Cell currentLocation) {
-        this.currentLocation = currentLocation;
-    }
-
-    @Override
-    public void grow(MainController controller) {
-        currentAge++;
-        if (currentAge == controller.getDataBase()
-                .getConstantNaturesFeaturesMap()
-                .get(this.getTypeName())
-                .getMAX_AGE()) {
-            deadCause = DeadCause.DIED_NATURALLY;
-            isAlive = false;
-            currentLocation.removeNature(this);
-
-            System.out.println(uniqueName + " " + deadCause + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "] at age " + currentAge);
-        }
+    public Gender getGENDER() {
+        return GENDER;
     }
 
     @Override
@@ -142,8 +41,8 @@ public abstract class AnimalFeatures implements Animal, Nature {
             return;
         }
 
-        int oldX = currentLocation.getX();
-        int oldY = currentLocation.getY();
+        int oldX = getCurrentLocation().getX();
+        int oldY = getCurrentLocation().getY();
 
 
         int[] newLocation = calculateNewLocation();
@@ -152,7 +51,7 @@ public abstract class AnimalFeatures implements Animal, Nature {
 
         if (cells[newX][newY].tryAddNature(this)) {
             cells[oldX][oldY].removeNature(this);
-            currentLocation = cells[newX][newY];
+            setCurrentLocation(cells[newX][newY]);
 //            System.out.println(name + " moved from [" + oldX + "," + oldY + "] to [" + newX + "," + newY + "]");
         } else {
 //            System.out.println(name + " can't move to [" + newX + "," + newY + "] location - it's full");
@@ -163,8 +62,8 @@ public abstract class AnimalFeatures implements Animal, Nature {
 
     private int[] calculateNewLocation() {
         int[] newLocation = new int[2];
-        newLocation[0] = currentLocation.getX();
-        newLocation[1] = currentLocation.getY();
+        newLocation[0] = getCurrentLocation().getX();
+        newLocation[1] = getCurrentLocation().getY();
 
         int newX = newLocation[0];
         int newY = newLocation[1];
@@ -232,7 +131,7 @@ public abstract class AnimalFeatures implements Animal, Nature {
     private boolean calculateRandomMove(MainController controller) {
         int maxMove = controller.getDataBase()
                 .getConstantNaturesFeaturesMap()
-                .get(this.getTypeName())
+                .get(getTYPE_NAME())
                 .getMAX_TRAVEL_SPEED();
 
         currentMove = maxMove > 0 ? ThreadLocalRandom.current().nextInt(0, maxMove) : 0;
@@ -240,8 +139,35 @@ public abstract class AnimalFeatures implements Animal, Nature {
         return currentMove > 0;
     }
 
-    public void eat() {
+    public void eat(MainController controller) {
+        DataBase dataBase = controller.getDataBase();
+        HashMap<String, HashMap<String, Integer>> preferableFood = dataBase.getPreferableFoodMap();
+        HashMap<String, Integer> currAnimalPrefFood = preferableFood.get(getTYPE_NAME());
+        HashMap<String, HashSet<Nature>> natureOnCell = getCurrentLocation().getNatureOnCell();
 
+        Optional<Nature> optionalNatureToEat = natureOnCell.values().stream()
+                .flatMap(Collection::stream)
+                .filter(nature -> canEat(nature, currAnimalPrefFood))
+                .findFirst();
 
+        if (optionalNatureToEat.isEmpty()) {
+            System.out.println(this.getUNIQUE_NAME() + " couldn't eat");
+        } else {
+            Nature natureToEat = optionalNatureToEat.get();
+            natureToEat.die(DeadCause.HAS_BEEN_EATEN);
+            setCurrentWeight(AMOUNT_OF_FOOD_TO_FILL);
+            eatCounter++;
+
+            System.out.println(natureToEat.getUNIQUE_NAME() + " " + DeadCause.HAS_BEEN_EATEN + " by " + getUNIQUE_NAME()
+            + " on [" + getCurrentLocation().getX() + "," + getCurrentLocation().getY() + "]");
+        }
+    }
+
+    private boolean canEat(Nature nature, HashMap<String, Integer> currAnimalPrefFood) {
+        int eatRandomChance = ThreadLocalRandom.current().nextInt(0, 100);
+        String natureName = nature.getTYPE_NAME();
+        int eatChanceOfNature = currAnimalPrefFood.get(natureName);
+
+        return eatRandomChance <= eatChanceOfNature && eatChanceOfNature != 0;
     }
 }
