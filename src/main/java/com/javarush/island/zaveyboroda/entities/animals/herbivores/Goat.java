@@ -6,7 +6,7 @@ import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 
 public class Goat extends AnimalFeatures implements Herbivore {
-    public Goat(ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
-        super(animalFeatures, cell, isBaby);
+    public Goat(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
+        super(name, animalFeatures, cell, isBaby);
     }
 }

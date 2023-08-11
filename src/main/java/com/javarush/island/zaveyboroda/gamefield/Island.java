@@ -47,7 +47,6 @@ public class Island {
         for (AnimalFeatures animal : animalSetList) {
 //            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
 //            System.out.println();
-//                animal.grow(mainController);
             animal.move(mainController, cells);
 //            System.out.println();
 //            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
@@ -140,18 +139,22 @@ public class Island {
         }
 
         public boolean tryAddNature(Nature nature) {
-            if (natureOnCell.get(nature.getName()).size() < mainController.getDataBase()
+            if (natureOnCell.get(nature.getClass().getSimpleName()).size() < mainController.getDataBase()
                     .getConstantNaturesFeaturesMap()
-                    .get(nature.getName())
+                    .get(nature.getClass().getSimpleName())
                     .getMAX_AMOUNT_ON_CELL()) {
-                return natureOnCell.get(nature.getName()).add(nature);
+                return natureOnCell.get(nature.getClass().getSimpleName()).add(nature);
             }
 
             return false;
         }
 
         public void removeNature(Nature nature) {
-            natureOnCell.get(nature.getName()).remove(nature);
+            if (natureOnCell.get(nature.getClass().getSimpleName()).remove(nature)) {
+
+            } else {
+                System.out.println(nature.getName() + " not removed");
+            }
         }
     }
 }

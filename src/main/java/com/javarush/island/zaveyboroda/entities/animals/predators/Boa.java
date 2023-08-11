@@ -8,8 +8,8 @@ import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 
 public class Boa extends AnimalFeatures implements Predator {
 
-    public Boa(ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
-        super(animalFeatures, cell, isBaby);
+    public Boa(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
+        super(name, animalFeatures, cell, isBaby);
     }
 
     @Override

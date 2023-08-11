@@ -7,7 +7,7 @@ import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 
 public class Duck extends AnimalFeatures implements Predator, Herbivore {
-    public Duck(ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
-        super(animalFeatures, cell, isBaby);
+    public Duck(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
+        super(name, animalFeatures, cell, isBaby);
     }
 }

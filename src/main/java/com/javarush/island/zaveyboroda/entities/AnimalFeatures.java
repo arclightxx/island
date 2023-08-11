@@ -14,8 +14,9 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class AnimalFeatures implements Animal, Nature {
+    private static int counter = 0;
+    private final String name;
     private boolean isAlive = true;
-    private String name;
     @InjectRandomCurrentWeight(adultWeightSpread = 0.1, babyWeightSpread = 0.9)
     private double currentWeight;
     private int currentMove;
@@ -27,12 +28,12 @@ public abstract class AnimalFeatures implements Animal, Nature {
     private Island.Cell currentLocation;
 
     public AnimalFeatures() {
-
+        this.name = this.getClass().getSimpleName() + ++counter;
     }
 
-    public AnimalFeatures(ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
+    public AnimalFeatures(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
         NatureFeaturesFieldAnnotationProcessor.calculateAndSetAnnotatedFields(this, animalFeatures, isBaby);
-        name = this.getClass().getSimpleName();
+        this.name = name + ++counter;
         deadCause = DeadCause.ALIVE;
         currentLocation = cell;
     }
@@ -41,17 +42,17 @@ public abstract class AnimalFeatures implements Animal, Nature {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AnimalFeatures that)) return false;
-        return isAlive == that.isAlive && Double.compare(currentWeight, that.currentWeight) == 0 && currentAge == that.currentAge && Objects.equals(name, that.name) && deadCause == that.deadCause && gender == that.gender && Objects.equals(currentLocation, that.currentLocation);
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isAlive, name, currentWeight, currentAge, deadCause, gender, currentLocation);
+        return Objects.hash(name);
     }
 
     public String toString() {
         return gender + " "
-                + this.getClass().getSimpleName() + " is alive and "
+                + this.getName() + " is alive and "
                 + currentWeight + "kg of weight; "
                 + currentAge + " years old";
     }
@@ -66,10 +67,6 @@ public abstract class AnimalFeatures implements Animal, Nature {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public double getCurrentWeight() {
@@ -125,7 +122,7 @@ public abstract class AnimalFeatures implements Animal, Nature {
         currentAge++;
         if (currentAge == controller.getDataBase()
                 .getConstantNaturesFeaturesMap()
-                .get(name)
+                .get(this.getClass().getSimpleName())
                 .getMAX_AGE()) {
             deadCause = DeadCause.DIED_NATURALLY;
             isAlive = false;
@@ -157,6 +154,8 @@ public abstract class AnimalFeatures implements Animal, Nature {
         } else {
 //            System.out.println(name + " can't move to " + newX + "," + newY + " location - it's full");
         }
+
+        this.grow(controller);
     }
 
     private int[] calculateNewLocation() {
@@ -230,7 +229,7 @@ public abstract class AnimalFeatures implements Animal, Nature {
     private boolean calculateRandomMove(MainController controller) {
         int maxMove = controller.getDataBase()
                 .getConstantNaturesFeaturesMap()
-                .get(this.getName())
+                .get(this.getClass().getSimpleName())
                 .getMAX_TRAVEL_SPEED();
 
         currentMove = maxMove > 0 ? ThreadLocalRandom.current().nextInt(0, maxMove) : 0;

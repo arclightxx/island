@@ -7,8 +7,8 @@ import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.entities.Predator;
 
 public class Eagle extends AnimalFeatures implements Predator {
-    public Eagle(ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
-        super(animalFeatures, cell, isBaby);
+    public Eagle(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
+        super(name, animalFeatures, cell, isBaby);
     }
 
     @Override

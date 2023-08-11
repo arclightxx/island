@@ -8,8 +8,8 @@ import com.javarush.island.zaveyboroda.entities.Predator;
 
 public class Fox extends AnimalFeatures implements Predator {
 
-    public Fox(ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
-        super(animalFeatures, cell, isBaby);
+    public Fox(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
+        super(name, animalFeatures, cell, isBaby);
     }
 
     @Override
