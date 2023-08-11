@@ -12,17 +12,18 @@ import java.util.Objects;
 import java.util.Random;
 
 public abstract class PlantFeatures implements Nature {
+    private final String name;
+    private static int counter = 0;
     private boolean isAlive = true;
-    private String name;
     private double currentWeight;
     @InjectRandomCurrentAge(min = 10)
     private int currentAge;
     private DeadCause deadCause;
     private Island.Cell currentLocation;
 
-    public PlantFeatures(ConstantNatureFeatures constantNatureFeatures, Island.Cell cell, boolean isBaby) {
+    public PlantFeatures(String name, ConstantNatureFeatures constantNatureFeatures, Island.Cell cell, boolean isBaby) {
         CalculateRandomAgeProcessor.calculateAndSetRandomCurrentAge(this, constantNatureFeatures, isBaby);
-        name = this.getClass().getSimpleName();
+        this.name = name + ++counter;
         currentWeight = constantNatureFeatures.getMAX_WEIGHT();
         deadCause = DeadCause.ALIVE;
         currentLocation = cell;
@@ -32,13 +33,12 @@ public abstract class PlantFeatures implements Nature {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PlantFeatures that)) return false;
-        return isAlive == that.isAlive && Double.compare(currentWeight, that.currentWeight) == 0 && currentAge == that.currentAge && deadCause == that.deadCause && Objects.equals(currentLocation, that.currentLocation);
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-//        return Objects.hash(isAlive, currentWeight, currentAge, deadCause, currentLocation);
-        return new Random().nextInt(Integer.MAX_VALUE);
+        return Objects.hash(name);
     }
 
     @Override
@@ -56,14 +56,8 @@ public abstract class PlantFeatures implements Nature {
     public void setAlive(boolean alive) {
         isAlive = alive;
     }
-
-    @Override
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public double getCurrentWeight() {

@@ -5,8 +5,8 @@ import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 
 public class Plant extends PlantFeatures implements Nature {
-    public Plant(ConstantNatureFeatures constantNatureFeatures, Island.Cell cell, boolean isBaby) {
-        super(constantNatureFeatures, cell, isBaby);
+    public Plant(String name, ConstantNatureFeatures constantNatureFeatures, Island.Cell cell, boolean isBaby) {
+        super(name, constantNatureFeatures, cell, isBaby);
     }
 
     @Override
