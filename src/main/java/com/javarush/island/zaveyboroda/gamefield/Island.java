@@ -140,21 +140,21 @@ public class Island {
         }
 
         public boolean tryAddNature(Nature nature) {
-            if (natureOnCell.get(nature.getClass().getSimpleName()).size() < dataBase
+            if (natureOnCell.get(nature.getUniqueName()).size() < dataBase
                     .getConstantNaturesFeaturesMap()
-                    .get(nature.getClass().getSimpleName())
+                    .get(nature.getUniqueName())
                     .getMAX_AMOUNT_ON_CELL()) {
-                return natureOnCell.get(nature.getClass().getSimpleName()).add(nature);
+                return natureOnCell.get(nature.getUniqueName()).add(nature);
             }
 
             return false;
         }
 
         public void removeNature(Nature nature) {
-            if (natureOnCell.get(nature.getClass().getSimpleName()).remove(nature)) {
+            if (natureOnCell.get(nature.getUniqueName()).remove(nature)) {
 
             } else {
-                System.out.println(nature.getName() + " not removed");
+                System.out.println(nature.getUniqueName() + " not removed");
             }
         }
     }
