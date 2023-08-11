@@ -12,11 +12,6 @@ public class Eagle extends AnimalFeatures implements Predator {
     }
 
     @Override
-    public void eat() {
-
-    }
-
-    @Override
     public void reproduction(Nature father, Nature mother) {
 
     }
