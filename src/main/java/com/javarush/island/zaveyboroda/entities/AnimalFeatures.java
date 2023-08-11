@@ -128,14 +128,14 @@ public abstract class AnimalFeatures implements Animal, Nature {
             isAlive = false;
             currentLocation.removeNature(this);
 
-            System.out.println(name + " " + deadCause + " on " + currentLocation.getX() + "," + currentLocation.getY() + " at age " + currentAge);
+            System.out.println(name + " " + deadCause + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "] at age " + currentAge);
         }
     }
 
     @Override
     public void move(MainController controller, Island.Cell[][] cells) {
         if (!calculateRandomMove(controller)) {
-//            System.out.println(name + " stay on it's field " + currentLocation.getX() + "," + currentLocation.getY());
+//            System.out.println(name + " stay on it's field [" + currentLocation.getX() + "," + currentLocation.getY() + "]");
             return;
         }
 
@@ -150,9 +150,9 @@ public abstract class AnimalFeatures implements Animal, Nature {
         if (cells[newX][newY].tryAddNature(this)) {
             cells[oldX][oldY].removeNature(this);
             currentLocation = cells[newX][newY];
-//            System.out.println(name + " moved from " + oldX + "," + oldY + " to " + newX + "," + newY);
+//            System.out.println(name + " moved from [" + oldX + "," + oldY + "] to [" + newX + "," + newY + "]");
         } else {
-//            System.out.println(name + " can't move to " + newX + "," + newY + " location - it's full");
+//            System.out.println(name + " can't move to [" + newX + "," + newY + "] location - it's full");
         }
 
         this.grow(controller);
@@ -194,36 +194,36 @@ public abstract class AnimalFeatures implements Animal, Nature {
         return newLocation;
     }
 
-    private boolean canMoveLeft(int oldY) {
-        return oldY-1 > 0;
+    private boolean canMoveLeft(int newY) {
+        return newY-1 > 0;
     }
 
-    private boolean canMoveDown(int oldX) {
-        return oldX+1 < Island.HEIGHT;
+    private boolean canMoveDown(int newX) {
+        return newX+1 < Island.HEIGHT;
     }
 
-    private boolean canMoveRight(int oldY) {
-        return oldY+1 < Island.WIDTH;
+    private boolean canMoveRight(int newY) {
+        return newY+1 < Island.WIDTH;
     }
 
-    private boolean canMoveUp(int oldX) {
-        return oldX-1 > 0;
+    private boolean canMoveUp(int newX) {
+        return newX-1 > 0;
     }
 
-    private int moveUp(int oldX) {
-        return oldX-1;
+    private int moveUp(int newX) {
+        return newX-1;
     }
 
-    public int moveRight(int oldY) {
-        return oldY+1;
+    public int moveRight(int newY) {
+        return newY+1;
     }
 
-    public int moveDown(int oldX) {
-        return oldX+1;
+    public int moveDown(int newX) {
+        return newX+1;
     }
 
-    public int moveLeft(int oldY) {
-        return oldY-1;
+    public int moveLeft(int newY) {
+        return newY-1;
     }
 
     private boolean calculateRandomMove(MainController controller) {
@@ -235,5 +235,9 @@ public abstract class AnimalFeatures implements Animal, Nature {
         currentMove = maxMove > 0 ? ThreadLocalRandom.current().nextInt(0, maxMove) : 0;
 
         return currentMove > 0;
+    }
+
+    public void eat() {
+
     }
 }
