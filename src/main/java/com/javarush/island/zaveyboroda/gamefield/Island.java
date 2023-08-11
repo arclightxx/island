@@ -43,17 +43,34 @@ public class Island {
         System.out.println("Day " + (i+1));
         System.out.println();
         List<AnimalFeatures> animalSetList = updateAnimalSetList();
-        System.out.println(animalSetList.size());
+        List<Nature> natureList = Arrays.stream(cells)
+                .flatMap(Arrays::stream)
+                .flatMap(cell -> cell.getNatureOnCell().values().stream())
+                .flatMap(Collection::stream)
+                .toList();
 
+        System.out.println(natureList.size());
         for (AnimalFeatures animal : animalSetList) {
-//            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
-//            System.out.println();
             animal.move(mainController, cells);
-//            System.out.println();
-//            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
         }
 
-        System.out.println(updateAnimalSetList().size());
+        natureList = Arrays.stream(cells)
+                .flatMap(Arrays::stream)
+                .flatMap(cell -> cell.getNatureOnCell().values().stream())
+                .flatMap(Collection::stream)
+                .toList();
+        System.out.println(natureList.size());
+        for (AnimalFeatures animal : animalSetList) {
+            animal.eat(mainController);
+        }
+
+        natureList = Arrays.stream(cells)
+                .flatMap(Arrays::stream)
+                .flatMap(cell -> cell.getNatureOnCell().values().stream())
+                .flatMap(Collection::stream)
+                .toList();
+        System.out.println(AnimalFeatures.eatCounter + " has been eaten");
+        System.out.println(natureList.size() + " left");
     }
 
     private List<AnimalFeatures> updateAnimalSetList() {
@@ -140,21 +157,21 @@ public class Island {
         }
 
         public boolean tryAddNature(Nature nature) {
-            if (natureOnCell.get(nature.getUniqueName()).size() < dataBase
+            if (natureOnCell.get(nature.getTYPE_NAME()).size() < dataBase
                     .getConstantNaturesFeaturesMap()
-                    .get(nature.getUniqueName())
+                    .get(nature.getTYPE_NAME())
                     .getMAX_AMOUNT_ON_CELL()) {
-                return natureOnCell.get(nature.getUniqueName()).add(nature);
+                return natureOnCell.get(nature.getTYPE_NAME()).add(nature);
             }
 
             return false;
         }
 
         public void removeNature(Nature nature) {
-            if (natureOnCell.get(nature.getUniqueName()).remove(nature)) {
+            if (natureOnCell.get(nature.getTYPE_NAME()).remove(nature)) {
 
             } else {
-                System.out.println(nature.getUniqueName() + " not removed");
+                System.out.println(nature.getUNIQUE_NAME() + " not removed");
             }
         }
     }
