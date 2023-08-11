@@ -7,6 +7,7 @@ import com.javarush.island.zaveyboroda.annotations.NatureFeaturesFieldAnnotation
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
+import com.javarush.island.zaveyboroda.repository.DataBase;
 import com.javarush.island.zaveyboroda.repository.DeadCause;
 import com.javarush.island.zaveyboroda.repository.Gender;
 
@@ -15,7 +16,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class AnimalFeatures implements Animal, Nature {
     private static int counter = 0;
-    private final String name;
+    private final String uniqueName;
+    private final String typeName;
     private boolean isAlive = true;
     @InjectRandomCurrentWeight(adultWeightSpread = 0.1, babyWeightSpread = 0.9)
     private double currentWeight;
@@ -27,13 +29,10 @@ public abstract class AnimalFeatures implements Animal, Nature {
     private Gender gender = Gender.FEMALE;
     private Island.Cell currentLocation;
 
-    public AnimalFeatures() {
-        this.name = this.getClass().getSimpleName() + ++counter;
-    }
-
     public AnimalFeatures(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
         NatureFeaturesFieldAnnotationProcessor.calculateAndSetAnnotatedFields(this, animalFeatures, isBaby);
-        this.name = name + ++counter;
+        uniqueName = name + ++counter;
+        typeName = this.getClass().getSimpleName();
         deadCause = DeadCause.ALIVE;
         currentLocation = cell;
     }
@@ -42,17 +41,17 @@ public abstract class AnimalFeatures implements Animal, Nature {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AnimalFeatures that)) return false;
-        return Objects.equals(name, that.name);
+        return Objects.equals(uniqueName, that.uniqueName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(uniqueName);
     }
 
     public String toString() {
         return gender + " "
-                + this.getName() + " is alive and "
+                + this.getUniqueName() + " is alive and "
                 + currentWeight + "kg of weight; "
                 + currentAge + " years old";
     }
@@ -65,8 +64,12 @@ public abstract class AnimalFeatures implements Animal, Nature {
         isAlive = alive;
     }
 
-    public String getName() {
-        return name;
+    public String getUniqueName() {
+        return uniqueName;
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 
     public double getCurrentWeight() {
@@ -122,13 +125,13 @@ public abstract class AnimalFeatures implements Animal, Nature {
         currentAge++;
         if (currentAge == controller.getDataBase()
                 .getConstantNaturesFeaturesMap()
-                .get(this.getClass().getSimpleName())
+                .get(this.getTypeName())
                 .getMAX_AGE()) {
             deadCause = DeadCause.DIED_NATURALLY;
             isAlive = false;
             currentLocation.removeNature(this);
 
-            System.out.println(name + " " + deadCause + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "] at age " + currentAge);
+            System.out.println(uniqueName + " " + deadCause + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "] at age " + currentAge);
         }
     }
 
@@ -229,7 +232,7 @@ public abstract class AnimalFeatures implements Animal, Nature {
     private boolean calculateRandomMove(MainController controller) {
         int maxMove = controller.getDataBase()
                 .getConstantNaturesFeaturesMap()
-                .get(this.getClass().getSimpleName())
+                .get(this.getTypeName())
                 .getMAX_TRAVEL_SPEED();
 
         currentMove = maxMove > 0 ? ThreadLocalRandom.current().nextInt(0, maxMove) : 0;
@@ -238,6 +241,7 @@ public abstract class AnimalFeatures implements Animal, Nature {
     }
 
     public void eat() {
+
 
     }
 }

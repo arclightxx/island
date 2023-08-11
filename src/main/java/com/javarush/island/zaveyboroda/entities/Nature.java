@@ -9,5 +9,5 @@ public interface Nature {
     }
     void grow(MainController controller);
 
-    String getName();
+    String getUniqueName();
 }

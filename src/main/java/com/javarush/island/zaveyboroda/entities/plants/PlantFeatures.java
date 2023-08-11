@@ -9,11 +9,11 @@ import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 import com.javarush.island.zaveyboroda.repository.DeadCause;
 
 import java.util.Objects;
-import java.util.Random;
 
 public abstract class PlantFeatures implements Nature {
-    private final String name;
     private static int counter = 0;
+    private final String uniqueName;
+    private final String typeName;
     private boolean isAlive = true;
     private double currentWeight;
     @InjectRandomCurrentAge(min = 10)
@@ -23,7 +23,8 @@ public abstract class PlantFeatures implements Nature {
 
     public PlantFeatures(String name, ConstantNatureFeatures constantNatureFeatures, Island.Cell cell, boolean isBaby) {
         CalculateRandomAgeProcessor.calculateAndSetRandomCurrentAge(this, constantNatureFeatures, isBaby);
-        this.name = name + ++counter;
+        uniqueName = name + ++counter;
+        typeName = this.getClass().getSimpleName();
         currentWeight = constantNatureFeatures.getMAX_WEIGHT();
         deadCause = DeadCause.ALIVE;
         currentLocation = cell;
@@ -33,12 +34,12 @@ public abstract class PlantFeatures implements Nature {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PlantFeatures that)) return false;
-        return Objects.equals(name, that.name);
+        return Objects.equals(uniqueName, that.uniqueName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(uniqueName);
     }
 
     @Override
@@ -56,8 +57,12 @@ public abstract class PlantFeatures implements Nature {
     public void setAlive(boolean alive) {
         isAlive = alive;
     }
-    public String getName() {
-        return name;
+    public String getUniqueName() {
+        return uniqueName;
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 
     public double getCurrentWeight() {
@@ -97,13 +102,13 @@ public abstract class PlantFeatures implements Nature {
         currentAge ++;
         if (currentAge == controller.getDataBase()
                 .getConstantNaturesFeaturesMap()
-                .get(name)
+                .get(typeName)
                 .getMAX_AGE()) {
             deadCause = DeadCause.DIED_NATURALLY;
             isAlive = false;
             currentLocation.removeNature(this);
 
-            System.out.println(name + " " + deadCause + " on " + currentLocation.getX() + "," + currentLocation.getY() + " at age " + currentAge);
+            System.out.println(uniqueName + " " + deadCause + " on " + currentLocation.getX() + "," + currentLocation.getY() + " at age " + currentAge);
         }
     }
 }
