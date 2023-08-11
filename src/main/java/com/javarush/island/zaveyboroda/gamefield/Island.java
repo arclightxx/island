@@ -12,7 +12,6 @@ public class Island {
     public static final int WIDTH = 5;
     public static final int HEIGHT = 5;
     private final MainController mainController;
-    private Island island;
     private final Cell[][] cells;
 
     public Island(MainController mainController) {
@@ -32,28 +31,39 @@ public class Island {
 
         HashMap<String, HashSet<Nature>> map = cells[0][0].natureOnCell;
 
-//        map.forEach(((s, natures) -> System.out.println(s + " " + natures.size())));
+        map.forEach(((s, natures) -> System.out.println(s + " " + natures.size())));
     }
 
     public void startSimulation() {
         initCellsAndNature();
 
-        List<AnimalFeatures> animalSetList = Arrays.stream(cells)
+
+        int i = 0;
+        System.out.println("Day " + (i+1));
+        System.out.println();
+        List<AnimalFeatures> animalSetList = updateAnimalSetList();
+        System.out.println(animalSetList.size());
+
+        for (AnimalFeatures animal : animalSetList) {
+//            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
+//            System.out.println();
+//                animal.grow(mainController);
+            animal.move(mainController, cells);
+//            System.out.println();
+//            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
+        }
+
+        System.out.println(updateAnimalSetList().size());
+    }
+
+    private List<AnimalFeatures> updateAnimalSetList() {
+        return Arrays.stream(cells)
                 .flatMap(Arrays::stream)
                 .flatMap(cell -> cell.getNatureOnCell().values().stream())
                 .flatMap(Collection::stream)
                 .filter(nature -> nature instanceof AnimalFeatures)
                 .map(animal -> (AnimalFeatures) animal)
                 .toList();
-
-        for (AnimalFeatures animal : animalSetList) {
-//            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
-//            System.out.println();
-            animal.move(mainController, cells);
-            animal.grow(mainController);
-//            System.out.println();
-//            animal.getCurrentLocation().getNatureOnCell().forEach((s, natures) -> System.out.println(s + " " + natures.size()));
-        }
     }
 
     private void initNatureOnCell(Cell cell, DataBase db) {
@@ -105,6 +115,26 @@ public class Island {
             this.natureOnCell = natureOnCell;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Cell cell)) return false;
+            return x == cell.x && y == cell.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+
+        @Override
+        public String toString() {
+            return "Cell{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    '}';
+        }
+
         private void createNature() {
 
         }
@@ -114,9 +144,7 @@ public class Island {
                     .getConstantNaturesFeaturesMap()
                     .get(nature.getName())
                     .getMAX_AMOUNT_ON_CELL()) {
-                natureOnCell.get(nature.getName()).add(nature);
-
-                return true;
+                return natureOnCell.get(nature.getName()).add(nature);
             }
 
             return false;
