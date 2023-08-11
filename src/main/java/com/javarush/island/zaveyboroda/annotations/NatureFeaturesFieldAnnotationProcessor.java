@@ -11,7 +11,7 @@ public class NatureFeaturesFieldAnnotationProcessor {
     }
 
     public static void calculateAndSetAnnotatedFields(Object object, ConstantNatureFeatures constantNatureFeatures, boolean isBaby) {
-        Class<?> clazz = object.getClass().getSuperclass();
+        Class<?> clazz = object.getClass().getSuperclass().getSuperclass();
         Field[] fields = clazz.getDeclaredFields();
 
         for (Field field : fields) {
@@ -19,8 +19,6 @@ public class NatureFeaturesFieldAnnotationProcessor {
                 calculateAndSetRandomCurrentWeight(object, constantNatureFeatures, field, isBaby);
             } else if (field.isAnnotationPresent(InjectRandomCurrentAge.class)) {
                 CalculateRandomAgeProcessor.calculateAndSetRandomCurrentAge(object, constantNatureFeatures, isBaby);
-            } else if (field.isAnnotationPresent(InjectRandomGender.class)) {
-                calculateAndSetGender(object, field);
             }
         }
     }
@@ -39,17 +37,6 @@ public class NatureFeaturesFieldAnnotationProcessor {
             field.set(object, result);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Couldn't set currentWeight value" + "\n" + e.getMessage());
-        }
-    }
-
-    private static void calculateAndSetGender(Object object, Field field) {
-        Gender gender = Math.random() > 0.5 ? Gender.MALE : Gender.FEMALE;
-
-        try {
-            field.setAccessible(true);
-            field.set(object, gender);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Couldn't set gender value" + "\n" + e.getMessage());
         }
     }
 }

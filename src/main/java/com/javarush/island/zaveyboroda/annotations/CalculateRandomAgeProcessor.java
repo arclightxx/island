@@ -11,7 +11,7 @@ public class CalculateRandomAgeProcessor {
     }
 
     public static void calculateAndSetRandomCurrentAge(Object object, ConstantNatureFeatures constantNatureFeatures, boolean isBaby) {
-        Class<?> clazz = object.getClass().getSuperclass();
+        Class<?> clazz = object.getClass().getSuperclass().getSuperclass();
         Field[] fields = clazz.getDeclaredFields();
         Random random = new Random();
 
