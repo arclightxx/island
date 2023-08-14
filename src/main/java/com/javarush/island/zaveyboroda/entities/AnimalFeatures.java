@@ -1,16 +1,20 @@
 package com.javarush.island.zaveyboroda.entities;
 
 import com.javarush.island.zaveyboroda.controllers.MainController;
+import com.javarush.island.zaveyboroda.factory.NatureFactory;
 import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
 import com.javarush.island.zaveyboroda.repository.DataBase;
 import com.javarush.island.zaveyboroda.repository.DeadCause;
 import com.javarush.island.zaveyboroda.repository.Gender;
 
+import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public abstract class AnimalFeatures extends NatureAbstractClass implements Animal {
+    public static int bornCounter = 0;
     public static int eatCounter = 0;
     private final double AMOUNT_OF_FOOD_TO_FILL;
     private int currentMove;
@@ -49,15 +53,16 @@ public abstract class AnimalFeatures extends NatureAbstractClass implements Anim
         int newX = newLocation[0];
         int newY = newLocation[1];
 
-        if (cells[newX][newY].tryAddNature(this)) {
-            cells[oldX][oldY].removeNature(this);
-            setCurrentLocation(cells[newX][newY]);
-//            System.out.println(name + " moved from [" + oldX + "," + oldY + "] to [" + newX + "," + newY + "]");
+        if (cells[newX][newY].getNatureOnCell().get(getTYPE_NAME()).size() < getMAX_AMOUNT_ON_CELL()) {
+            if (cells[newX][newY].tryAddNature(this)) {
+                cells[oldX][oldY].removeNature(this);
+                setCurrentLocation(cells[newX][newY]);
+            }
         } else {
-//            System.out.println(name + " can't move to [" + newX + "," + newY + "] location - it's full");
+//            System.out.println(getUNIQUE_NAME() + " can't move to [" + newX + "," + newY + "] location - it's full");
         }
 
-        this.grow(controller);
+//        grow(controller);
     }
 
     private int[] calculateNewLocation() {
@@ -150,17 +155,19 @@ public abstract class AnimalFeatures extends NatureAbstractClass implements Anim
                 .filter(nature -> canEat(nature, currAnimalPrefFood))
                 .findFirst();
 
-        if (optionalNatureToEat.isEmpty()) {
-            System.out.println(this.getUNIQUE_NAME() + " couldn't eat");
-        } else {
+        if (optionalNatureToEat.isPresent()) {
             Nature natureToEat = optionalNatureToEat.get();
             natureToEat.die(DeadCause.HAS_BEEN_EATEN);
             setCurrentWeight(AMOUNT_OF_FOOD_TO_FILL);
             eatCounter++;
 
             System.out.println(natureToEat.getUNIQUE_NAME() + " " + DeadCause.HAS_BEEN_EATEN + " by " + getUNIQUE_NAME()
-            + " on [" + getCurrentLocation().getX() + "," + getCurrentLocation().getY() + "]");
+                    + " on [" + getCurrentLocation().getX() + "," + getCurrentLocation().getY() + "]");
+        } else {
+            System.out.println(this.getUNIQUE_NAME() + " couldn't eat");
         }
+
+        grow(controller);
     }
 
     private boolean canEat(Nature nature, HashMap<String, Integer> currAnimalPrefFood) {
@@ -169,5 +176,43 @@ public abstract class AnimalFeatures extends NatureAbstractClass implements Anim
         int eatChanceOfNature = currAnimalPrefFood.get(natureName);
 
         return eatRandomChance <= eatChanceOfNature && eatChanceOfNature != 0;
+    }
+
+    public void reproduce(MainController controller) {
+        DataBase dataBase = controller.getDataBase();
+        Island.Cell currCell = getCurrentLocation();
+        HashMap<String, HashSet<Nature>> natureOnCell = currCell.getNatureOnCell();
+        HashSet<Nature> currTypeOfNature = natureOnCell.get(getTYPE_NAME());
+
+        if (currTypeOfNature.size() > getMAX_AMOUNT_ON_CELL()) {
+            System.out.println(getUNIQUE_NAME() + " can't reproduce: "
+                    + "Cell [" + currCell.getX() + "," + currCell.getY() + "] is full of " + getTYPE_NAME() + " species");
+        }
+
+        Set<AnimalFeatures> currTypeAnimals = natureOnCell.get(getTYPE_NAME()).stream()
+                .filter(animal -> animal instanceof AnimalFeatures)
+                .map(animal -> (AnimalFeatures) animal)
+                .filter(animal -> animal.getCurrentAge() > animal.getMAX_AGE()/2)
+                .collect(Collectors.toSet());
+
+        Optional<AnimalFeatures> optionalAnimal = currTypeAnimals.stream()
+                .filter(partner -> !getGENDER().equals(partner.getGENDER()))
+                .findFirst();
+
+        if (optionalAnimal.isPresent()) {
+            AnimalFeatures animal = optionalAnimal.get();
+            AnimalFeatures baby = NatureFactory.createNature(getClass(), dataBase, currCell, true);
+            currCell.tryAddNature(baby);
+
+//            System.out.println("[" + getGENDER() + " " + getUNIQUE_NAME() + " " + getCurrentAge() + "y.o.] and "
+//                    + animal.getGENDER() + " " + animal.getUNIQUE_NAME() + " " + animal.getCurrentAge() + "y.o.]"
+//                    + " make a baby "
+//                    + baby.getGENDER() + " " + baby.getUNIQUE_NAME() + " " + baby.getCurrentAge() + "y.o.]!!");
+            bornCounter++;
+        } else {
+//            System.out.println(getUNIQUE_NAME() + " couldn't make a baby");
+        }
+
+//        grow(controller);
     }
 }

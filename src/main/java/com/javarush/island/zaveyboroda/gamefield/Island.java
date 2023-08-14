@@ -61,7 +61,7 @@ public class Island {
                 .toList();
         System.out.println(natureList.size());
         for (AnimalFeatures animal : animalSetList) {
-            animal.eat(mainController);
+            animal.reproduce(mainController);
         }
 
         natureList = Arrays.stream(cells)
@@ -69,7 +69,8 @@ public class Island {
                 .flatMap(cell -> cell.getNatureOnCell().values().stream())
                 .flatMap(Collection::stream)
                 .toList();
-        System.out.println(AnimalFeatures.eatCounter + " has been eaten");
+
+        System.out.println(AnimalFeatures.bornCounter + " has been born");
         System.out.println(natureList.size() + " left");
     }
 
@@ -157,14 +158,7 @@ public class Island {
         }
 
         public boolean tryAddNature(Nature nature) {
-            if (natureOnCell.get(nature.getTYPE_NAME()).size() < dataBase
-                    .getConstantNaturesFeaturesMap()
-                    .get(nature.getTYPE_NAME())
-                    .getMAX_AMOUNT_ON_CELL()) {
-                return natureOnCell.get(nature.getTYPE_NAME()).add(nature);
-            }
-
-            return false;
+            return natureOnCell.get(nature.getTYPE_NAME()).add(nature);
         }
 
         public void removeNature(Nature nature) {
