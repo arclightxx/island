@@ -14,12 +14,13 @@ public abstract class NatureAbstractClass implements Nature {
     private static int counter = 0;
     private final String UNIQUE_NAME;
     private final String TYPE_NAME;
+    private final int MAX_AGE;
+    private final int MAX_AMOUNT_ON_CELL;
     private boolean isAlive = true;
     @InjectRandomCurrentWeight(adultWeightSpread = 0.1, babyWeightSpread = 0.9)
     private double currentWeight;
     @InjectRandomCurrentAge(min = 1)
     private int currentAge;
-    private final int MAX_AGE;
     private DeadCause deadCause;
     private Island.Cell currentLocation;
 
@@ -28,6 +29,7 @@ public abstract class NatureAbstractClass implements Nature {
         UNIQUE_NAME = name + ++counter;
         TYPE_NAME = this.getClass().getSimpleName();
         MAX_AGE = animalFeatures.getMAX_AGE();
+        MAX_AMOUNT_ON_CELL = animalFeatures.getMAX_AMOUNT_ON_CELL();
         deadCause = DeadCause.ALIVE;
         currentLocation = cell;
     }
@@ -35,13 +37,13 @@ public abstract class NatureAbstractClass implements Nature {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AnimalFeatures that)) return false;
-        return Objects.equals(UNIQUE_NAME, that.getTYPE_NAME());
+        if (!(o instanceof NatureAbstractClass that)) return false;
+        return MAX_AMOUNT_ON_CELL == that.MAX_AMOUNT_ON_CELL && Objects.equals(UNIQUE_NAME, that.UNIQUE_NAME);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(UNIQUE_NAME);
+        return Objects.hash(UNIQUE_NAME, MAX_AMOUNT_ON_CELL);
     }
 
     @Override
@@ -71,6 +73,14 @@ public abstract class NatureAbstractClass implements Nature {
         return TYPE_NAME;
     }
 
+    public int getMAX_AGE() {
+        return MAX_AGE;
+    }
+
+    public int getMAX_AMOUNT_ON_CELL() {
+        return MAX_AMOUNT_ON_CELL;
+    }
+
     public boolean isAlive() {
         return isAlive;
     }
@@ -93,10 +103,6 @@ public abstract class NatureAbstractClass implements Nature {
 
     public void setCurrentAge(int currentAge) {
         this.currentAge = currentAge;
-    }
-
-    public int getMAX_AGE() {
-        return MAX_AGE;
     }
 
     public DeadCause getDeadCause() {
