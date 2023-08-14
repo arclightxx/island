@@ -11,9 +11,4 @@ public class Wolf extends AnimalFeatures implements Predator {
     public Wolf(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
         super(name, animalFeatures, cell, isBaby);
     }
-
-    @Override
-    public void reproduction(Nature father, Nature mother) {
-
-    }
 }

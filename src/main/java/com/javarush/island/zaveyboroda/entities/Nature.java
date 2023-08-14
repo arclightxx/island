@@ -5,12 +5,10 @@ import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.DeadCause;
 
 public interface Nature {
-    default void reproduction(Nature father, Nature mother) {
-
-    }
     void grow(MainController controller);
     void die(DeadCause deadCause);
-
+    boolean isAlive();
+    double getCurrentWeight();
     String getUNIQUE_NAME();
     String getTYPE_NAME();
     Island.Cell getCurrentLocation();

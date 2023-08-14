@@ -11,9 +11,4 @@ public class Boa extends AnimalFeatures implements Predator {
     public Boa(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
         super(name, animalFeatures, cell, isBaby);
     }
-
-    @Override
-    public void reproduction(Nature father, Nature mother) {
-
-    }
 }
