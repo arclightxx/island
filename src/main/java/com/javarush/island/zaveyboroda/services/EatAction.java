@@ -27,35 +27,42 @@ public class EatAction implements Runnable {
 
     @Override
     public void run() {
-        if (!animal.isAlive()) {
-            return;
+        synchronized (currentLocation) {
+            if (!animal.isAlive()) {
+                return;
+            }
+
+            DataBase dataBase = controller.getDataBase();
+            HashMap<String, HashMap<String, Integer>> preferableFood = dataBase.getPreferableFoodMap();
+            HashMap<String, Integer> currAnimalPrefFood = preferableFood.get(animal.getTYPE_NAME());
+
+
+            HashMap<String, HashSet<Nature>> natureOnCell = currentLocation.getNatureOnCell();
+
+            Optional<Nature> optionalNatureToEat = natureOnCell.values().stream()
+                    .flatMap(Collection::stream)
+                    .filter(nature -> nature.isAlive() && canEat(nature, currAnimalPrefFood))
+                    .findFirst();
+
+            if (optionalNatureToEat.isPresent()) {
+                Nature natureToEat = optionalNatureToEat.get();
+                synchronized (natureToEat) {
+                    if (natureToEat.isAlive()) {
+                        natureToEat.die(DeadCause.HAS_BEEN_EATEN);
+
+                        double animalWeight = calculateNewAnimalWeight(natureToEat);
+
+                        animal.setCurrentWeight(animalWeight);
+                        NatureAbstractClass.eatCounter++;
+
+//                        System.out.println(natureToEat.getUNIQUE_NAME() + " " + DeadCause.HAS_BEEN_EATEN + " by " + animal.getUNIQUE_NAME()
+//                                + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "]");
+                    }
+                }
+            } else {
+//                System.out.println(animal.getUNIQUE_NAME() + " couldn't eat");
+            }
         }
-
-        DataBase dataBase = controller.getDataBase();
-        HashMap<String, HashMap<String, Integer>> preferableFood = dataBase.getPreferableFoodMap();
-        HashMap<String, Integer> currAnimalPrefFood = preferableFood.get(animal.getTYPE_NAME());
-        HashMap<String, HashSet<Nature>> natureOnCell = currentLocation.getNatureOnCell();
-
-        Optional<Nature> optionalNatureToEat = natureOnCell.values().stream()
-                .flatMap(Collection::stream)
-                .filter(nature -> nature.isAlive() && canEat(nature, currAnimalPrefFood))
-                .findFirst();
-
-        if (optionalNatureToEat.isPresent()) {
-            Nature natureToEat = optionalNatureToEat.get();
-            natureToEat.die(DeadCause.HAS_BEEN_EATEN);
-
-            double animalWeight = calculateNewAnimalWeight(natureToEat);
-            animal.setCurrentWeight(animalWeight);
-            NatureAbstractClass.eatCounter++;
-
-            System.out.println(natureToEat.getUNIQUE_NAME() + " " + DeadCause.HAS_BEEN_EATEN + " by " + animal.getUNIQUE_NAME()
-                    + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "]");
-        } else {
-            System.out.println(animal.getUNIQUE_NAME() + " couldn't eat");
-        }
-
-        animal.grow(controller);
     }
 
     private boolean canEat(Nature nature, HashMap<String, Integer> currAnimalPrefFood) {

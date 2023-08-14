@@ -25,27 +25,29 @@ public class PlantReproduceAction implements Runnable {
 
     @Override
     public void run() {
-        if (!plant.isAlive()) {
-            return;
-        }
+        synchronized (currentLocation) {
+            if (!plant.isAlive()) {
+                return;
+            }
 
-        DataBase dataBase = controller.getDataBase();
-        HashMap<String, HashSet<Nature>> natureOnCell = currentLocation.getNatureOnCell();
-        HashSet<Nature> currTypeOfNature = natureOnCell.get(plant.getTYPE_NAME());
-        boolean bornChance = ThreadLocalRandom.current().nextInt(0, 100) < 50;
+            DataBase dataBase = controller.getDataBase();
+            HashMap<String, HashSet<Nature>> natureOnCell = currentLocation.getNatureOnCell();
+            HashSet<Nature> currTypeOfNature = natureOnCell.get(plant.getTYPE_NAME());
+            boolean bornChance = ThreadLocalRandom.current().nextInt(0, 100) < 50;
 
-        if (currTypeOfNature.size() > plant.getMAX_AMOUNT_ON_CELL()) {
-            System.out.println(plant.getUNIQUE_NAME() + " can't reproduce: "
-                    + "Cell [" + currentLocation.getX() + "," + currentLocation.getY() + "] is full of " + plant.getTYPE_NAME() + " species");
-            return;
-        }
+            if (currTypeOfNature.size() > plant.getMAX_AMOUNT_ON_CELL()) {
+//                System.out.println(plant.getUNIQUE_NAME() + " can't reproduce: "
+//                        + "Cell [" + currentLocation.getX() + "," + currentLocation.getY() + "] is full of " + plant.getTYPE_NAME() + " species");
+                return;
+            }
 
-        if (bornChance) {
-            PlantFeatures baby = NatureFactory.createNature(plant.getClass(), dataBase, currentLocation, true);
-            currentLocation.tryAddNature(baby);
-            NatureAbstractClass.bornCounter++;
-        } else {
+            if (bornChance) {
+                PlantFeatures baby = NatureFactory.createNature(plant.getClass(), dataBase, currentLocation, true);
+                currentLocation.tryAddNature(baby);
+                NatureAbstractClass.bornCounter++;
+            } else {
 //            System.out.println(getUNIQUE_NAME() + " couldn't reproduce");
+            }
         }
     }
 }

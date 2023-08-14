@@ -25,29 +25,31 @@ public class MoveAction implements Runnable {
 
     @Override
     public void run() {
-        if (!calculateRandomMove(controller) || !animal.isAlive()) {
+        synchronized (currentLocation) {
+            if (!calculateRandomMove(controller) || !animal.isAlive()) {
 //            System.out.println(name + " stay on it's field [" + currentLocation.getX() + "," + currentLocation.getY() + "]");
-            return;
-        }
-
-        int oldX = currentLocation.getX();
-        int oldY = currentLocation.getY();
-
-
-        int[] newLocation = calculateNewLocation();
-        int newX = newLocation[0];
-        int newY = newLocation[1];
-
-        if (cells[newX][newY].getNatureOnCell().get(animal.getTYPE_NAME()).size() < animal.getMAX_AMOUNT_ON_CELL()) {
-            if (cells[newX][newY].tryAddNature(animal)) {
-                cells[oldX][oldY].removeNature(animal);
-                animal.setCurrentLocation(cells[newX][newY]);
+                return;
             }
-        } else {
-//            System.out.println(getUNIQUE_NAME() + " can't move to [" + newX + "," + newY + "] location - it's full");
-        }
 
-        animal.grow(controller);
+            int oldX = currentLocation.getX();
+            int oldY = currentLocation.getY();
+
+
+            int[] newLocation = calculateNewLocation();
+            int newX = newLocation[0];
+            int newY = newLocation[1];
+
+            if (cells[newX][newY].getNatureOnCell().get(animal.getTYPE_NAME()).size() < animal.getMAX_AMOUNT_ON_CELL()) {
+                if (cells[newX][newY].tryAddNature(animal)) {
+                    cells[oldX][oldY].removeNature(animal);
+                    animal.setCurrentLocation(cells[newX][newY]);
+
+//                    System.out.println(animal.getUNIQUE_NAME() + " move from [" + oldX + "," + oldY + "] to [" + newX + "," + newY + "]");
+                }
+            } else {
+//            System.out.println(getUNIQUE_NAME() + " can't move to [" + newX + "," + newY + "] location - it's full");
+            }
+        }
     }
 
     private int[] calculateNewLocation() {

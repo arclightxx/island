@@ -27,44 +27,44 @@ public class AnimalReproduceAction implements Runnable {
 
     @Override
     public void run() {
-        if (!animal.isAlive()) {
-            return;
-        }
+        synchronized (currentLocation){
+            if (!animal.isAlive()) {
+                return;
+            }
 
-        DataBase dataBase = controller.getDataBase();
-        HashMap<String, HashSet<Nature>> natureOnCell = currentLocation.getNatureOnCell();
-        HashSet<Nature> currTypeNature = natureOnCell.get(animal.getTYPE_NAME());
+            DataBase dataBase = controller.getDataBase();
+            HashMap<String, HashSet<Nature>> natureOnCell = currentLocation.getNatureOnCell();
+            HashSet<Nature> currTypeNature = natureOnCell.get(animal.getTYPE_NAME());
 
-        if (currTypeNature.size() > animal.getMAX_AMOUNT_ON_CELL()) {
-            System.out.println(animal.getUNIQUE_NAME() + " can't reproduce: "
-                    + "Cell [" + currentLocation.getX() + "," + currentLocation.getY() + "] is full of " + animal.getTYPE_NAME() + " species");
-            return;
-        }
+            if (currTypeNature.size() > animal.getMAX_AMOUNT_ON_CELL()) {
+//                System.out.println(animal.getUNIQUE_NAME() + " can't reproduce: "
+//                        + "Cell [" + currentLocation.getX() + "," + currentLocation.getY() + "] is full of " + animal.getTYPE_NAME() + " species");
+                return;
+            }
 
-        Set<AnimalFeatures> currTypeAnimals = currTypeNature.stream()
-                .filter(animal -> animal instanceof AnimalFeatures)
-                .map(animal -> (AnimalFeatures) animal)
-                .collect(Collectors.toSet());
+            Set<AnimalFeatures> currTypeAnimals = currTypeNature.stream()
+                    .filter(animal -> animal instanceof AnimalFeatures)
+                    .map(animal -> (AnimalFeatures) animal)
+                    .collect(Collectors.toSet());
 
-        Optional<AnimalFeatures> optionalAnimal = currTypeAnimals.stream()
-                .filter(NatureAbstractClass::isAlive)
-                .filter(animal -> animal.getCurrentAge() > animal.getMAX_AGE()/2)
-                .filter(partner -> !animal.getGENDER().equals(partner.getGENDER()))
-                .findFirst();
+            Optional<AnimalFeatures> optionalAnimal = currTypeAnimals.stream()
+                    .filter(NatureAbstractClass::isAlive)
+                    .filter(animal -> animal.getCurrentAge() > animal.getMAX_AGE() / 2)
+                    .filter(partner -> !animal.getGENDER().equals(partner.getGENDER()))
+                    .findFirst();
 
-        if (optionalAnimal.isPresent()) {
-            AnimalFeatures baby = NatureFactory.createNature(animal.getClass(), dataBase, currentLocation, true);
-            currentLocation.tryAddNature(baby);
+            if (optionalAnimal.isPresent()) {
+                AnimalFeatures baby = NatureFactory.createNature(animal.getClass(), dataBase, currentLocation, true);
+                currentLocation.tryAddNature(baby);
 
-//            System.out.println("[" + getGENDER() + " " + getUNIQUE_NAME() + " " + getCurrentAge() + "y.o.] and "
+//            System.out.println("[" + animal.getGENDER() + " " + animal.getUNIQUE_NAME() + " " + animal.getCurrentAge() + "y.o.] and ["
 //                    + animal.getGENDER() + " " + animal.getUNIQUE_NAME() + " " + animal.getCurrentAge() + "y.o.]"
-//                    + " make a baby "
+//                    + " make a baby ["
 //                    + baby.getGENDER() + " " + baby.getUNIQUE_NAME() + " " + baby.getCurrentAge() + "y.o.]!!");
-            NatureAbstractClass.bornCounter++;
-        } else {
+                NatureAbstractClass.bornCounter++;
+            } else {
 //            System.out.println(getUNIQUE_NAME() + " couldn't reproduce");
+            }
         }
-
-        animal.grow(controller);
     }
 }
