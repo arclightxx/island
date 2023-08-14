@@ -11,6 +11,9 @@ import com.javarush.island.zaveyboroda.repository.DeadCause;
 import java.util.*;
 
 public abstract class NatureAbstractClass implements Nature {
+    public static int bornCounter = 0;
+    public static int dieCounter = 0;
+    public static int eatCounter = 0;
     private static int counter = 0;
     private final String UNIQUE_NAME;
     private final String TYPE_NAME;
@@ -53,6 +56,7 @@ public abstract class NatureAbstractClass implements Nature {
             die(DeadCause.DIED_NATURALLY);
 
             System.out.println(UNIQUE_NAME + " " + deadCause + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "] at age " + currentAge);
+            dieCounter++;
         }
     }
 
