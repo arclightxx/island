@@ -3,11 +3,22 @@ package com.javarush.island.zaveyboroda.gamefield;
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.entities.AnimalFeatures;
+import com.javarush.island.zaveyboroda.entities.NatureAbstractClass;
+import com.javarush.island.zaveyboroda.entities.plants.PlantFeatures;
 import com.javarush.island.zaveyboroda.factory.NatureFactory;
+import com.javarush.island.zaveyboroda.repository.ActionType;
 import com.javarush.island.zaveyboroda.repository.DataBase;
+import com.javarush.island.zaveyboroda.services.MoveAction;
+import com.javarush.island.zaveyboroda.services.EatAction;
+import com.javarush.island.zaveyboroda.services.AnimalReproduceAction;
+import com.javarush.island.zaveyboroda.services.PlantReproduceAction;
 import com.javarush.island.zaveyboroda.view.View;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class Island {
     public static final int WIDTH = 5;
@@ -16,11 +27,13 @@ public class Island {
     private final DataBase dataBase;
     private final View view;
     private final Cell[][] cells;
+    private ScheduledExecutorService executor;
 
     public Island(MainController mainController) {
         this.mainController = mainController;
         this.dataBase = mainController.getDataBase();
         this.view = mainController.getView();
+        this.executor = Executors.newScheduledThreadPool(3);
         cells = new Cell[WIDTH][HEIGHT];
     }
 
@@ -29,7 +42,6 @@ public class Island {
             for (int j = 0; j < HEIGHT; j++) {
                 cells[i][j] = new Cell(i, j);
                 Cell cell = cells[i][j];
-                cell.createNature();
                 initNatureOnCell(cell, dataBase);
             }
         }
@@ -37,50 +49,86 @@ public class Island {
 
     public void startSimulation() {
         initCellsAndNature();
+        List<Nature> allNatureList = updateAllNatureList();
 
+        System.out.println("Day 0: " + allNatureList.size() + " nature on Island");
 
-        int i = 0;
-        System.out.println("Day " + (i+1));
-        System.out.println();
-        List<AnimalFeatures> animalSetList = updateAnimalSetList();
-        List<Nature> natureList = Arrays.stream(cells)
-                .flatMap(Arrays::stream)
-                .flatMap(cell -> cell.getNatureOnCell().values().stream())
-                .flatMap(Collection::stream)
-                .toList();
+        for (int i = 0; i < 10; i++) {
+            for (Nature nature : allNatureList) {
+                ActionType randomActionType = getRandomActionType();
 
-        System.out.println(natureList.size());
-        for (AnimalFeatures animal : animalSetList) {
-            animal.move(mainController, cells);
+                if (nature instanceof PlantFeatures) randomActionType = ActionType.REPRODUCE;
+
+                Runnable action = createActionInstance(randomActionType, mainController, nature);
+                executor.schedule(action, 0, TimeUnit.MILLISECONDS);
+                nature.grow(mainController);
+            }
+
+            executor.shutdown();
+
+            try {
+                executor.awaitTermination(100, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            allNatureList = updateAllNatureList();
+            printState(i, allNatureList);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            executor = Executors.newScheduledThreadPool(3);
         }
-
-        natureList = Arrays.stream(cells)
-                .flatMap(Arrays::stream)
-                .flatMap(cell -> cell.getNatureOnCell().values().stream())
-                .flatMap(Collection::stream)
-                .toList();
-        System.out.println(natureList.size());
-        for (AnimalFeatures animal : animalSetList) {
-            animal.reproduce(mainController);
-        }
-
-        natureList = Arrays.stream(cells)
-                .flatMap(Arrays::stream)
-                .flatMap(cell -> cell.getNatureOnCell().values().stream())
-                .flatMap(Collection::stream)
-                .toList();
-
-        System.out.println(AnimalFeatures.bornCounter + " has been born");
-        System.out.println(natureList.size() + " left");
     }
 
-    private List<AnimalFeatures> updateAnimalSetList() {
+    private void printState(int i, List<Nature> allNatureList) {
+        System.out.println("Day " + (i +1) + ":");
+        System.out.println("\t" + allNatureList.size() + " nature left:");
+
+        System.out.println("\t\t" + NatureAbstractClass.dieCounter + " died naturally;");
+        System.out.println("\t\t" + NatureAbstractClass.bornCounter + " has been born;");
+        System.out.println("\t\t" + NatureAbstractClass.eatCounter + " has been eaten;");
+        NatureAbstractClass.dieCounter = 0;
+        NatureAbstractClass.bornCounter = 0;
+        NatureAbstractClass.eatCounter = 0;
+    }
+
+    private ActionType getRandomActionType() {
+        // Generate a random index corresponding to the ActionType enum
+        int randomIndex = ThreadLocalRandom.current().nextInt(ActionType.values().length);
+        return ActionType.values()[randomIndex];
+    }
+
+    private Runnable createActionInstance(ActionType actionType, MainController controller, Nature nature) {
+        switch (actionType) {
+            case MOVE -> {
+                return new MoveAction(controller, (AnimalFeatures) nature, nature.getCurrentLocation(), cells);
+            }
+            case EAT -> {
+                return new EatAction(controller, (AnimalFeatures) nature, nature.getCurrentLocation());
+            }
+            case REPRODUCE -> {
+                if (nature instanceof AnimalFeatures) {
+                    return new AnimalReproduceAction(controller, (AnimalFeatures) nature, nature.getCurrentLocation());
+                } else if (nature instanceof PlantFeatures) {
+                    return new PlantReproduceAction(controller, (PlantFeatures) nature, nature.getCurrentLocation());
+                } else {
+                    throw new IllegalArgumentException("Unknown nature type for reproduction: " + nature.getTYPE_NAME());
+                }
+            }
+            default -> throw new IllegalArgumentException("Unknown action type: " + actionType);
+        }
+    }
+
+    private List<Nature> updateAllNatureList() {
         return Arrays.stream(cells)
                 .flatMap(Arrays::stream)
                 .flatMap(cell -> cell.getNatureOnCell().values().stream())
                 .flatMap(Collection::stream)
-                .filter(nature -> nature instanceof AnimalFeatures)
-                .map(animal -> (AnimalFeatures) animal)
                 .toList();
     }
 
@@ -107,7 +155,7 @@ public class Island {
         cell.setNatureOnCell(naturesOnCell);
     }
 
-    public class Cell {
+    public static class Cell {
         private final int x;
         private final int y;
         private HashMap<String, HashSet<Nature>> natureOnCell;
@@ -153,20 +201,12 @@ public class Island {
                     '}';
         }
 
-        private void createNature() {
-
-        }
-
         public boolean tryAddNature(Nature nature) {
             return natureOnCell.get(nature.getTYPE_NAME()).add(nature);
         }
 
         public void removeNature(Nature nature) {
-            if (natureOnCell.get(nature.getTYPE_NAME()).remove(nature)) {
-
-            } else {
-                System.out.println(nature.getUNIQUE_NAME() + " not removed");
-            }
+            natureOnCell.get(nature.getTYPE_NAME()).remove(nature);
         }
     }
 }

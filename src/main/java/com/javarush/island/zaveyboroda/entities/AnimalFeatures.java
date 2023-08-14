@@ -1,20 +1,10 @@
 package com.javarush.island.zaveyboroda.entities;
 
-import com.javarush.island.zaveyboroda.controllers.MainController;
-import com.javarush.island.zaveyboroda.factory.NatureFactory;
 import com.javarush.island.zaveyboroda.gamefield.Island;
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
-import com.javarush.island.zaveyboroda.repository.DataBase;
-import com.javarush.island.zaveyboroda.repository.DeadCause;
 import com.javarush.island.zaveyboroda.repository.Gender;
 
-import javax.xml.crypto.Data;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-
 public abstract class AnimalFeatures extends NatureAbstractClass implements Animal {
-    public static int eatCounter = 0;
     private final double AMOUNT_OF_FOOD_TO_FILL;
     private final Gender GENDER;
 

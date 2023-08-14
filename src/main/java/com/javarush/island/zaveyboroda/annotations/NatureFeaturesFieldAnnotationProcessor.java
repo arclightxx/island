@@ -1,7 +1,6 @@
 package com.javarush.island.zaveyboroda.annotations;
 
 import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
-import com.javarush.island.zaveyboroda.repository.Gender;
 
 import java.lang.reflect.Field;
 

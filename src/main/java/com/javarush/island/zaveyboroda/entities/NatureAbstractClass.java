@@ -30,7 +30,7 @@ public abstract class NatureAbstractClass implements Nature {
     public NatureAbstractClass(String name, ConstantNatureFeatures animalFeatures, Island.Cell cell, boolean isBaby) {
         NatureFeaturesFieldAnnotationProcessor.calculateAndSetAnnotatedFields(this, animalFeatures, isBaby);
         UNIQUE_NAME = name + ++counter;
-        TYPE_NAME = this.getClass().getSimpleName();
+        TYPE_NAME = getClass().getSimpleName();
         MAX_AGE = animalFeatures.getMAX_AGE();
         MAX_AMOUNT_ON_CELL = animalFeatures.getMAX_AMOUNT_ON_CELL();
         deadCause = DeadCause.ALIVE;
@@ -55,7 +55,7 @@ public abstract class NatureAbstractClass implements Nature {
         if (currentAge == MAX_AGE) {
             die(DeadCause.DIED_NATURALLY);
 
-            System.out.println(UNIQUE_NAME + " " + deadCause + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "] at age " + currentAge);
+//            System.out.println(UNIQUE_NAME + " " + deadCause + " on [" + currentLocation.getX() + "," + currentLocation.getY() + "] at age " + currentAge);
             dieCounter++;
         }
     }
