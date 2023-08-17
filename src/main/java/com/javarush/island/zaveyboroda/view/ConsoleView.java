@@ -48,4 +48,8 @@ public class ConsoleView implements View {
 
         return array;
     }
+
+    public void dayZeroDisplayState(int natureSize) {
+        System.out.println("Day 0: " + natureSize + " nature on Island");
+    }
 }

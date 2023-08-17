@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface View {
     void displayState(int i, List<Nature> allNatureList);
+    void dayZeroDisplayState(int natureSize);
 }
