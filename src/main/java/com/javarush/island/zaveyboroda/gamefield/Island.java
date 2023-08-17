@@ -26,13 +26,11 @@ public class Island {
     private final DataBase dataBase;
     private final View view;
     private final Cell[][] cells;
-    private ScheduledExecutorService executor;
 
     public Island(MainController mainController) {
         this.mainController = mainController;
         this.dataBase = mainController.getDataBase();
         this.view = mainController.getView();
-        this.executor = Executors.newScheduledThreadPool(3);
         cells = new Cell[WIDTH][HEIGHT];
     }
 
@@ -41,46 +39,54 @@ public class Island {
             for (int j = 0; j < HEIGHT; j++) {
                 cells[i][j] = new Cell(i, j);
                 Cell cell = cells[i][j];
-                initNatureOnCell(cell, dataBase);
+                cell.initNatureOnCell(dataBase);
             }
         }
     }
 
     public void startSimulation() {
         initCellsAndNature();
-        List<Nature> allNatureList = updateAllNatureList();
 
-        System.out.println("Day 0: " + allNatureList.size() + " nature on Island");
+        List<Nature> allNatureList = updateAllNatureList();
+        view.dayZeroDisplayState(allNatureList.size());
 
         for (int i = 0; i < 10; i++) {
-            for (Nature nature : allNatureList) {
-                ActionType randomActionType = getRandomActionType();
-
-                if (nature instanceof PlantFeatures) randomActionType = ActionType.REPRODUCE;
-
-                Runnable action = createActionInstance(randomActionType, mainController, nature);
-                executor.schedule(action, 0, TimeUnit.MILLISECONDS);
-                nature.grow(mainController);
-            }
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(3);
+            executeActionsForEachNature(allNatureList, executor);
 
             executor.shutdown();
-
+            boolean isExecTerminated = false;
             try {
-                executor.awaitTermination(100, TimeUnit.MILLISECONDS);
+                isExecTerminated = executor.awaitTermination(10000, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            allNatureList = updateAllNatureList();
-            view.displayState(i, allNatureList);
+            if (isExecTerminated) {
+                allNatureList = updateAllNatureList();
+                view.displayState(i, allNatureList);
+            } else {
+                List<Runnable> notExecuted = executor.shutdownNow();
+                System.err.println("Executor not terminated; Not executed tasks: " + notExecuted.size());
+            }
 
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
 
-            executor = Executors.newScheduledThreadPool(3);
+    private void executeActionsForEachNature(List<Nature> allNatureList, ScheduledExecutorService executor) {
+        for (Nature nature : allNatureList) {
+            ActionType randomActionType = getRandomActionType();
+
+            if (nature instanceof PlantFeatures) randomActionType = ActionType.REPRODUCE;
+
+            Runnable action = createActionInstance(randomActionType, mainController, nature);
+            executor.schedule(action, 0, TimeUnit.MILLISECONDS);
+            nature.grow(mainController);
         }
     }
 
@@ -90,18 +96,20 @@ public class Island {
     }
 
     private Runnable createActionInstance(ActionType actionType, MainController controller, Nature nature) {
+        Cell currLocation = nature.getCurrentLocation();
+
         switch (actionType) {
             case MOVE -> {
-                return new MoveAction(controller, (AnimalFeatures) nature, nature.getCurrentLocation(), cells);
+                return new MoveAction(controller, (AnimalFeatures) nature, currLocation, cells);
             }
             case EAT -> {
-                return new EatAction(controller, (AnimalFeatures) nature, nature.getCurrentLocation());
+                return new EatAction(controller, (AnimalFeatures) nature, currLocation);
             }
             case REPRODUCE -> {
                 if (nature instanceof AnimalFeatures) {
-                    return new AnimalReproduceAction(controller, (AnimalFeatures) nature, nature.getCurrentLocation());
+                    return new AnimalReproduceAction(controller, (AnimalFeatures) nature, currLocation);
                 } else if (nature instanceof PlantFeatures) {
-                    return new PlantReproduceAction(controller, (PlantFeatures) nature, nature.getCurrentLocation());
+                    return new PlantReproduceAction(controller, (PlantFeatures) nature, currLocation);
                 } else {
                     throw new IllegalArgumentException("Unknown nature type for reproduction: " + nature.getTYPE_NAME());
                 }
@@ -116,29 +124,6 @@ public class Island {
                 .flatMap(cell -> cell.getNatureOnCell().values().stream())
                 .flatMap(Collection::stream)
                 .toList();
-    }
-
-    private void initNatureOnCell(Cell cell, DataBase db) {
-        HashMap<String, HashSet<Nature>> naturesOnCell = new HashMap<>();
-        HashMap<String, Class<Nature>> natureClassesMap = db.getNatureClassesMap();
-
-        for (String key: natureClassesMap.keySet()) {
-            Class<? extends Nature> natureClass = db.getNatureClassesMap().get(key);
-
-            if (db.getNaturesConfigMap().get(key) == 0) {
-                naturesOnCell.put(key, new HashSet<>());
-            }
-
-            HashSet<Nature> naturesSet = new HashSet<>();
-            for (int i = 0; i < db.getNaturesConfigMap().get(key); i++){
-                Nature natureObject = NatureFactory.createNature(natureClass, db, cell, false);
-
-                naturesSet.add(natureObject);
-                naturesOnCell.put(key, naturesSet);
-            }
-        }
-
-        cell.setNatureOnCell(naturesOnCell);
     }
 
     public static class Cell {
@@ -185,6 +170,29 @@ public class Island {
                     "x=" + x +
                     ", y=" + y +
                     '}';
+        }
+
+        private void initNatureOnCell(DataBase db) {
+            HashMap<String, HashSet<Nature>> naturesOnCell = new HashMap<>();
+            HashMap<String, Class<Nature>> natureClassesMap = db.getNatureClassesMap();
+
+            for (String key: natureClassesMap.keySet()) {
+                Class<? extends Nature> natureClass = db.getNatureClassesMap().get(key);
+
+                if (db.getNaturesConfigMap().get(key) == 0) {
+                    naturesOnCell.put(key, new HashSet<>());
+                }
+
+                HashSet<Nature> naturesSet = new HashSet<>();
+                for (int i = 0; i < db.getNaturesConfigMap().get(key); i++){
+                    Nature natureObject = NatureFactory.createNature(natureClass, db, this, false);
+
+                    naturesSet.add(natureObject);
+                    naturesOnCell.put(key, naturesSet);
+                }
+            }
+
+            setNatureOnCell(naturesOnCell);
         }
 
         public boolean tryAddNature(Nature nature) {
