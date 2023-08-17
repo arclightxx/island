@@ -7,10 +7,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class JSONParse {
-    public JSONParse() {
-
-    }
-
     public static <T> T parseJSONFile(ObjectMapper mapper, String filePath, TypeReference<T> typeRef) {
         File jsonFile = new File(filePath);
 

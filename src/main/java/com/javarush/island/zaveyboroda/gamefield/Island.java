@@ -3,7 +3,6 @@ package com.javarush.island.zaveyboroda.gamefield;
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.entities.AnimalFeatures;
-import com.javarush.island.zaveyboroda.entities.NatureAbstractClass;
 import com.javarush.island.zaveyboroda.entities.plants.PlantFeatures;
 import com.javarush.island.zaveyboroda.factory.NatureFactory;
 import com.javarush.island.zaveyboroda.repository.ActionType;
@@ -73,7 +72,7 @@ public class Island {
             }
 
             allNatureList = updateAllNatureList();
-            printState(i, allNatureList);
+            view.displayState(i, allNatureList);
 
             try {
                 Thread.sleep(1000);
@@ -85,20 +84,7 @@ public class Island {
         }
     }
 
-    private void printState(int i, List<Nature> allNatureList) {
-        System.out.println("Day " + (i +1) + ":");
-        System.out.println("\t" + allNatureList.size() + " nature left:");
-
-        System.out.println("\t\t" + NatureAbstractClass.dieCounter + " died naturally;");
-        System.out.println("\t\t" + NatureAbstractClass.bornCounter + " has been born;");
-        System.out.println("\t\t" + NatureAbstractClass.eatCounter + " has been eaten;");
-        NatureAbstractClass.dieCounter = 0;
-        NatureAbstractClass.bornCounter = 0;
-        NatureAbstractClass.eatCounter = 0;
-    }
-
     private ActionType getRandomActionType() {
-        // Generate a random index corresponding to the ActionType enum
         int randomIndex = ThreadLocalRandom.current().nextInt(ActionType.values().length);
         return ActionType.values()[randomIndex];
     }
