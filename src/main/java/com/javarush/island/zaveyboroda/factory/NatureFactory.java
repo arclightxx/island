@@ -8,7 +8,6 @@ import com.javarush.island.zaveyboroda.repository.DataBase;
 import java.lang.reflect.Constructor;
 
 public class NatureFactory {
-
     public static <T extends Nature> T createNature(Class<? extends Nature> natureClass, DataBase db, Island.Cell cell, boolean isBaby) {
         try {
             Constructor<?> natureConstructor = natureClass.getDeclaredConstructor(String.class, ConstantNatureFeatures.class, Island.Cell.class, boolean.class);

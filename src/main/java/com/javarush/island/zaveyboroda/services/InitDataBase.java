@@ -13,10 +13,6 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class InitDataBase {
-
-    public InitDataBase()  {
-    }
-
     public void execute(DataBase dataBase) {
         ObjectMapper mapper = getAndActivateObjectMapper();
 

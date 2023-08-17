@@ -35,8 +35,6 @@ public class EatAction implements Runnable {
             DataBase dataBase = controller.getDataBase();
             HashMap<String, HashMap<String, Integer>> preferableFood = dataBase.getPreferableFoodMap();
             HashMap<String, Integer> currAnimalPrefFood = preferableFood.get(animal.getTYPE_NAME());
-
-
             HashMap<String, HashSet<Nature>> natureOnCell = currentLocation.getNatureOnCell();
 
             Optional<Nature> optionalNatureToEat = natureOnCell.values().stream()
@@ -76,9 +74,9 @@ public class EatAction implements Runnable {
     private double calculateNewAnimalWeight(Nature natureToEat) {
         double animalWeight = animal.getCurrentWeight();
         double foodWeight = natureToEat.getCurrentWeight();
-
         double deltaWeight = Math.min(foodWeight, animal.getAMOUNT_OF_FOOD_TO_FILL());
         animalWeight += deltaWeight;
+        
         return animalWeight;
     }
 }

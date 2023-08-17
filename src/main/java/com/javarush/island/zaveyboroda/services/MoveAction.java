@@ -33,8 +33,7 @@ public class MoveAction implements Runnable {
 
             int oldX = currentLocation.getX();
             int oldY = currentLocation.getY();
-
-
+            
             int[] newLocation = calculateNewLocation();
             int newX = newLocation[0];
             int newY = newLocation[1];
@@ -43,7 +42,6 @@ public class MoveAction implements Runnable {
                 if (cells[newX][newY].tryAddNature(animal)) {
                     cells[oldX][oldY].removeNature(animal);
                     animal.setCurrentLocation(cells[newX][newY]);
-
 //                    System.out.println(animal.getUNIQUE_NAME() + " move from [" + oldX + "," + oldY + "] to [" + newX + "," + newY + "]");
                 }
             } else {
@@ -64,7 +62,7 @@ public class MoveAction implements Runnable {
 
         for (int i = 0; i < currentMove; i++) {
             Collections.shuffle(directionsPool);
-
+            
             for (int direction : directionsPool) {
                 if (direction == 0 && canMoveUp(newX)) {
                     newX = moveUp(newX);

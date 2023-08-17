@@ -4,8 +4,8 @@ import com.javarush.island.zaveyboroda.repository.DataBase;
 import com.javarush.island.zaveyboroda.view.View;
 
 public class MainController {
-    private DataBase dataBase;
-    private View view;
+    private final DataBase dataBase;
+    private final View view;
 
     public MainController(DataBase dataBase, View view) {
         this.dataBase = dataBase;
