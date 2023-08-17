@@ -1,13 +1,13 @@
-package com.javarush.island.zaveyboroda.services;
+package com.javarush.island.zaveyboroda.services.utility;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javarush.island.zaveyboroda.entities.Nature;
-import com.javarush.island.zaveyboroda.repository.ConstantFilePath;
-import com.javarush.island.zaveyboroda.repository.ConstantNatureClassesPath;
-import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
-import com.javarush.island.zaveyboroda.repository.DataBase;
+import com.javarush.island.zaveyboroda.repository.paths.ConstantFilePath;
+import com.javarush.island.zaveyboroda.repository.paths.ConstantNatureClassesPath;
+import com.javarush.island.zaveyboroda.repository.database.ConstantNatureFeatures;
+import com.javarush.island.zaveyboroda.repository.database.DataBase;
 
 import java.util.HashMap;
 import java.util.Set;

@@ -2,8 +2,8 @@ package com.javarush.island.zaveyboroda;
 
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.gamefield.Island;
-import com.javarush.island.zaveyboroda.repository.DataBase;
-import com.javarush.island.zaveyboroda.services.InitDataBase;
+import com.javarush.island.zaveyboroda.repository.database.DataBase;
+import com.javarush.island.zaveyboroda.services.utility.InitDataBase;
 import com.javarush.island.zaveyboroda.view.ConsoleView;
 import com.javarush.island.zaveyboroda.view.View;
 

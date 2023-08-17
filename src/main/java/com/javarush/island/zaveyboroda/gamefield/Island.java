@@ -5,12 +5,12 @@ import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.entities.AnimalFeatures;
 import com.javarush.island.zaveyboroda.entities.plants.PlantFeatures;
 import com.javarush.island.zaveyboroda.factory.NatureFactory;
-import com.javarush.island.zaveyboroda.repository.ActionType;
-import com.javarush.island.zaveyboroda.repository.DataBase;
-import com.javarush.island.zaveyboroda.services.MoveAction;
-import com.javarush.island.zaveyboroda.services.EatAction;
-import com.javarush.island.zaveyboroda.services.AnimalReproduceAction;
-import com.javarush.island.zaveyboroda.services.PlantReproduceAction;
+import com.javarush.island.zaveyboroda.repository.enums.ActionType;
+import com.javarush.island.zaveyboroda.repository.database.DataBase;
+import com.javarush.island.zaveyboroda.services.actions.MoveAction;
+import com.javarush.island.zaveyboroda.services.actions.EatAction;
+import com.javarush.island.zaveyboroda.services.actions.AnimalReproduceAction;
+import com.javarush.island.zaveyboroda.services.actions.PlantReproduceAction;
 import com.javarush.island.zaveyboroda.view.View;
 
 import java.util.*;

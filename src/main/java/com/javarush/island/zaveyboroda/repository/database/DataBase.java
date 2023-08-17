@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.repository;
+package com.javarush.island.zaveyboroda.repository.database;
 
 import com.javarush.island.zaveyboroda.entities.Nature;
 

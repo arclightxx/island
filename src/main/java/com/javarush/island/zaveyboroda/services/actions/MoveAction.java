@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.services;
+package com.javarush.island.zaveyboroda.services.actions;
 
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.entities.AnimalFeatures;

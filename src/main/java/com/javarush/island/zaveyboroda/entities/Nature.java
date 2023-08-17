@@ -2,7 +2,7 @@ package com.javarush.island.zaveyboroda.entities;
 
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.gamefield.Island;
-import com.javarush.island.zaveyboroda.repository.DeadCause;
+import com.javarush.island.zaveyboroda.repository.enums.DeadCause;
 
 public interface Nature {
     void grow(MainController controller);

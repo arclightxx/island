@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.repository;
+package com.javarush.island.zaveyboroda.repository.paths;
 
 public class ConstantFilePath {
     public static final String NATURES_CONFIG_PATH = "src/main/java/com/javarush/island/zaveyboroda/repository/json/NatureConfig.json";

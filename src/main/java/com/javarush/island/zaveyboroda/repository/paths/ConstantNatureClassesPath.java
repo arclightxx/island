@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.repository;
+package com.javarush.island.zaveyboroda.repository.paths;
 
 public class ConstantNatureClassesPath {
     private static final String[] natureClassesPath = {"com.javarush.island.zaveyboroda.entities.animals.predators.",

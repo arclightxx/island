@@ -1,12 +1,12 @@
-package com.javarush.island.zaveyboroda.services;
+package com.javarush.island.zaveyboroda.services.actions;
 
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.entities.AnimalFeatures;
 import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.entities.NatureAbstractClass;
 import com.javarush.island.zaveyboroda.gamefield.Island;
-import com.javarush.island.zaveyboroda.repository.DataBase;
-import com.javarush.island.zaveyboroda.repository.DeadCause;
+import com.javarush.island.zaveyboroda.repository.database.DataBase;
+import com.javarush.island.zaveyboroda.repository.enums.DeadCause;
 
 import java.util.Collection;
 import java.util.HashMap;

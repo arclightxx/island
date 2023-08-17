@@ -2,8 +2,8 @@ package com.javarush.island.zaveyboroda.factory;
 
 import com.javarush.island.zaveyboroda.entities.Nature;
 import com.javarush.island.zaveyboroda.gamefield.Island;
-import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
-import com.javarush.island.zaveyboroda.repository.DataBase;
+import com.javarush.island.zaveyboroda.repository.database.ConstantNatureFeatures;
+import com.javarush.island.zaveyboroda.repository.database.DataBase;
 
 import java.lang.reflect.Constructor;
 

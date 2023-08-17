@@ -1,8 +1,8 @@
 package com.javarush.island.zaveyboroda.entities;
 
 import com.javarush.island.zaveyboroda.gamefield.Island;
-import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
-import com.javarush.island.zaveyboroda.repository.Gender;
+import com.javarush.island.zaveyboroda.repository.database.ConstantNatureFeatures;
+import com.javarush.island.zaveyboroda.repository.enums.Gender;
 
 public abstract class AnimalFeatures extends NatureAbstractClass implements Animal {
     private final double AMOUNT_OF_FOOD_TO_FILL;

@@ -1,6 +1,6 @@
 package com.javarush.island.zaveyboroda.annotations;
 
-import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
+import com.javarush.island.zaveyboroda.repository.database.ConstantNatureFeatures;
 
 import java.lang.reflect.Field;
 

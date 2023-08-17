@@ -5,8 +5,8 @@ import com.javarush.island.zaveyboroda.annotations.InjectRandomCurrentWeight;
 import com.javarush.island.zaveyboroda.annotations.NatureFeaturesFieldAnnotationProcessor;
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.gamefield.Island;
-import com.javarush.island.zaveyboroda.repository.ConstantNatureFeatures;
-import com.javarush.island.zaveyboroda.repository.DeadCause;
+import com.javarush.island.zaveyboroda.repository.database.ConstantNatureFeatures;
+import com.javarush.island.zaveyboroda.repository.enums.DeadCause;
 
 import java.util.*;
 

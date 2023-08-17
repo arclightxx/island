@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.repository;
+package com.javarush.island.zaveyboroda.repository.enums;
 
 public enum DeadCause {
     DIED_NATURALLY,

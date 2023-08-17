@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.services;
+package com.javarush.island.zaveyboroda.services.actions;
 
 import com.javarush.island.zaveyboroda.controllers.MainController;
 import com.javarush.island.zaveyboroda.entities.Nature;
@@ -6,7 +6,7 @@ import com.javarush.island.zaveyboroda.entities.NatureAbstractClass;
 import com.javarush.island.zaveyboroda.entities.plants.PlantFeatures;
 import com.javarush.island.zaveyboroda.factory.NatureFactory;
 import com.javarush.island.zaveyboroda.gamefield.Island;
-import com.javarush.island.zaveyboroda.repository.DataBase;
+import com.javarush.island.zaveyboroda.repository.database.DataBase;
 
 import java.util.HashMap;
 import java.util.HashSet;

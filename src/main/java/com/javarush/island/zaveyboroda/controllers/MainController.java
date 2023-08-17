@@ -1,6 +1,6 @@
 package com.javarush.island.zaveyboroda.controllers;
 
-import com.javarush.island.zaveyboroda.repository.DataBase;
+import com.javarush.island.zaveyboroda.repository.database.DataBase;
 import com.javarush.island.zaveyboroda.view.View;
 
 public class MainController {

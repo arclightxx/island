@@ -1,4 +1,4 @@
-package com.javarush.island.zaveyboroda.services;
+package com.javarush.island.zaveyboroda.services.utility;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
